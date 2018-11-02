@@ -1,0 +1,5 @@
+.env
+node_modules/
+
+# may want to remote package-lock from gitignore later on
+package-lock.json
