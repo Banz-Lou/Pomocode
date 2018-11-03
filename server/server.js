@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 const oauth = require('./utils/authenticate');
 const { access } = require('./utils/authorize');
 
+// GitHub Data fetch
+const gitHub = require('./utils/github/github');
+
 if (process.env !== 'production') {
   require('dotenv').config();
 }
@@ -13,9 +16,14 @@ if (process.env !== 'production') {
 const app = express();
 const { PORT } = process.env;
 
-app.use(session({ secret: 'PotatoCode' }));
+app.use(session({
+  secret: 'PotatoCode',
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/auth', oauth);
+app.use('/query', gitHub);
 
 //Initial setup
 app.get('/', access, (req, res) => {
@@ -24,10 +32,6 @@ app.get('/', access, (req, res) => {
 
 app.get('/login', (req, res) => {
   res.send('Please Login.');
-});
-
-app.get('/getGitHubData', access, (req, res) => {
-  res.send('getting github data...');
 });
 
 app.listen(PORT, () => {
