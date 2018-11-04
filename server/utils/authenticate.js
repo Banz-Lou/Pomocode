@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { Users } = require('../../database/database');
 
 // OAuth passport requirements
 const passport = require('passport');
@@ -18,12 +19,20 @@ passport.use(new GitHubStrategy({
   callbackURL: `http://localhost:${PORT}/auth/github/callback`
 },
   (accessToken, refreshToken, profile, cb) => {
-    // grab accessToken (for github query) and username
-    const UserAccess = {
-      accessToken,
-      username: profile.username
-    };
-    return cb(null, UserAccess);
+    // find or create User in db
+    Users.findOrCreate({
+      where: { username: profile.username }
+    })
+      .spread((usr, created) => {
+        return cb(null, {
+          accessToken,
+          username: usr.dataValues.username
+        });
+      })
+      .catch(err => {
+        console.log("Failed to find user. Err:", err);
+        return cb(null, false, { message: 'Incorrect user.' });
+      });
   }
 ));
 
