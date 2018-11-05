@@ -18,21 +18,22 @@ passport.use(new GitHubStrategy({
   clientSecret: GITHUB_CLIENT_SECRET,
   callbackURL: `http://localhost:${PORT}/auth/github/callback`
 },
-  (accessToken, refreshToken, profile, cb) => {
-    // find or create User in db
-    Users.findOrCreate({
-      where: { username: profile.username }
-    })
-      .spread((usr, created) => {
-        return cb(null, {
-          accessToken,
-          username: usr.dataValues.username
-        });
-      })
-      .catch(err => {
-        console.log("Failed to find user. Err:", err);
-        return cb(null, false, { message: 'Incorrect user.' });
+  async (accessToken, refreshToken, profile, cb) => {
+    // update(find) or create User in db
+    try {
+      await Users.upsert({
+        gitID: profile.id,
+        username: profile.username,
       });
+      return cb(null, {
+        accessToken,
+        username: profile.username
+      });
+    }
+    catch (err) {
+      console.log("Failed to find user. Err:", err);
+      return cb(null, false, { message: 'Incorrect user.' });
+    }
   }
 ));
 

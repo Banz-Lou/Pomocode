@@ -16,16 +16,12 @@ db.authenticate()
 
 /* DB Schema */
 const Users = db.define('users', {
-  username: {
+  gitID: {
     type: Sequelize.STRING,
     unique: true
-  }
-}, {
-    indexes: [{
-      unique: true,
-      fields: ['username']
-    }]
-  });
+  },
+  username: Sequelize.STRING,
+});
 
 // maybe has user id relation
 const Repositories = db.define('repositories', {
@@ -60,8 +56,8 @@ Repositories.hasMany(Issues);
 
 // promise chaining to account for relationships
 Users.sync()
-  .then(Repositories.sync())
-  .then(Issues.sync());
+  .then(async () => await Repositories.sync())
+  .then(async () => await Issues.sync());
 
 module.exports.db = db;
 module.exports.Users = Users;
