@@ -1,5 +1,8 @@
 .env
 node_modules/
 
-# may want to remote package-lock from gitignore later on
+# may want to remove package-lock from gitignore later on
 package-lock.json
+
+dist/bundle.js
+dist/hot
