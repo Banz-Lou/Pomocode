@@ -1,5 +1,6 @@
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
+const path = require('path');
 
 module.exports = ({ mode } = { mode: 'production' }) => {
 	// console.log(mode);
@@ -13,7 +14,7 @@ module.exports = ({ mode } = { mode: 'production' }) => {
 		plugins: [
 			new HtmlWebpackPlugin({
 				title: 'Pomocode',
-				template: './src/index.html'
+				template: 'src/index.html'
 			}),
 			new webpack.ProgressPlugin()
 		],
