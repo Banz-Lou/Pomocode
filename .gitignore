@@ -1,5 +1,5 @@
 .env
-node_modules/
+node_modules
 
 # may want to remove package-lock from gitignore later on
 package-lock.json
