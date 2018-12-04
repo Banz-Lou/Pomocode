@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/Banz-Lou/Pomocode#readme",
   "dependencies": {
+    "@emotion/core": "^10.0.2",
     "axios": "^0.18.0",
     "babel": "^6.23.0",
     "babel-jest": "^23.6.0",

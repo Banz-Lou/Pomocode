@@ -5,7 +5,7 @@ import DetailsContainer from './Details/DetailsContainer';
 import PlansContainer from './Plans/PlansContainer';
 
 import { Provider } from 'react-redux';
-import store from './store';
+import store from '../store';
 
 const data = [[1, 2], [1, 2], [1, 2, 3], [1]];
 

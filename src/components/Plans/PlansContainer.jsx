@@ -1,14 +1,14 @@
 import React from 'react';
 import { PlansList } from './PlansList';
-import { Planner } from './Planner';
+import Planner from './Planner';
 
 var PlansContainer = () => {
-	return (
-		<div>
-			<PlansList />
-			<Planner />
-		</div>
-	);
+  return (
+    <div>
+      <Planner />
+      <PlansList />
+    </div>
+  );
 };
 
 export default PlansContainer;
