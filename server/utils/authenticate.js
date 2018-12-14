@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const { Users } = require('../../database/database');
+const { Users } = require('../../database/database');
 
 // OAuth passport requirements
 const passport = require('passport');

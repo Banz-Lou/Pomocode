@@ -1,65 +1,91 @@
 const Sequelize = require('sequelize');
 const db = new Sequelize('pomocode', 'root', '', {
-	dialect: 'mysql',
-	host: 'localhost'
+  dialect: 'mysql',
+  host: 'localhost'
 });
 
 /* Connect to DB */
 //NOTE: in non-production mode, create database 'pomocode'
 db.authenticate()
-	.then(() => {
-		console.log('Connected to database: pomocode.');
-	})
-	.catch(err => {
-		console.log('Failed to connect to db. Error:', err);
-	});
+  .then(() => {
+    console.log('Connected to database: pomocode.');
+  })
+  .catch(err => {
+    console.log('Failed to connect to db. Error:', err);
+  });
 
 /* DB Schema */
 const Users = db.define('users', {
-	gitID: {
-		type: Sequelize.STRING,
-		unique: true
-	},
-	username: Sequelize.STRING
+  gitId: { type: Sequelize.STRING, unique: true },
+  userName: Sequelize.STRING,
+  trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 }
 });
 
-// maybe has user id relation
-const Repositories = db.define('repositories', {
-	gitID: {
-		type: Sequelize.STRING,
-		unique: true
-	},
-	url: Sequelize.STRING,
-	nameWithOwner: Sequelize.STRING
+const IssuesIntervals = db.define('issues_intervals', {
+  userName: Sequelize.STRING,
+  dailyInterval: Sequelize.INTEGER,
+  trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
+  priorActive: Sequelize.INTEGER,
+  active: Sequelize.INTEGER,
+  totalActive: Sequelize.INTEGER,
+  priorIdle: Sequelize.INTEGER,
+  idle: Sequelize.INTEGER,
+  totalIdle: Sequelize.INTEGER,
+  wordCount: Sequelize.INTEGER
 });
 
-// has user id relation, repo id relation
+const FilesIntervals = db.define('files_intervals', {
+  userName: Sequelize.STRING,
+  dailyInterval: Sequelize.INTEGER,
+  trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
+  fileName: Sequelize.STRING,
+  status: Sequelize.STRING,
+  active: Sequelize.INTEGER,
+  idle: Sequelize.INTEGER,
+  wordCount: Sequelize.INTEGER
+});
+
+const Intervals = db.define('intervals', {
+  userName: Sequelize.STRING,
+  trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
+  interval: Sequelize.INTEGER
+});
+
 const Issues = db.define('issues', {
-	gitID: {
-		type: Sequelize.STRING,
-		unique: true
-	},
-	number: Sequelize.INTEGER,
-	title: Sequelize.STRING,
-	body: Sequelize.TEXT('long')
+  gitId: { type: Sequelize.STRING, unique: true },
+  repoURL: Sequelize.STRING,
+  repoNameWithOwner: Sequelize.STRING,
+  repoIssueNum: Sequelize.INTEGER,
+  title: Sequelize.STRING,
+  body: Sequelize.TEXT('long'),
+  planSeconds: Sequelize.INTEGER,
+  planStartDate: Sequelize.DATEONLY,
+  planEndDate: Sequelize.DATEONLY,
+  completeTime: {
+    type: Sequelize.INTEGER,
+    defaultValue: 0
+  },
+  variance: Sequelize.FLOAT
 });
 
-// has issue id relation, repo id relation, user id relation
-// const Plans = db.define('plans', {
-
-// });
-
-// establishing one-to-many relationships
-Users.hasMany(Repositories);
+/* FOREIGN KEYS */
 Users.hasMany(Issues);
-Repositories.hasMany(Issues);
+Issues.belongsTo(Users);
 
-// promise chaining to account for relationships
-Users.sync()
-	.then(async () => await Repositories.sync())
-	.then(async () => await Issues.sync());
+Intervals.hasMany(FilesIntervals);
+FilesIntervals.belongsTo(Intervals);
+
+Intervals.hasMany(IssuesIntervals);
+IssuesIntervals.belongsTo(Intervals);
+
+Issues.hasMany(IssuesIntervals);
+IssuesIntervals.belongsTo(Issues);
+
+/* DB SYNC */
+Users.sync();
+Issues.sync();
+IssuesIntervals.sync();
+FilesIntervals.sync();
+Intervals.sync();
 
 module.exports.db = db;
-module.exports.Users = Users;
-module.exports.Repositories = Repositories;
-module.exports.Issues = Issues;
