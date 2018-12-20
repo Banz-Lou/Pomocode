@@ -1,6 +1,7 @@
 const Sequelize = require('sequelize');
-const db = new Sequelize('pomocode', 'root', '', {
-	dialect: 'mysql',
+
+const db = new Sequelize('pomocode', '', '', {
+	dialect: 'postgres',
 	host: 'localhost'
 });
 
@@ -38,7 +39,7 @@ const FilesIntervals = db.define('files_intervals', {
 	userName: Sequelize.STRING,
 	dailyInterval: Sequelize.INTEGER,
 	trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
-	fileName: Sequelize.STRING,
+	filePath: Sequelize.STRING,
 	status: Sequelize.STRING,
 	active: Sequelize.INTEGER,
 	idle: Sequelize.INTEGER,
@@ -81,6 +82,9 @@ IssuesIntervals.belongsTo(Intervals);
 Issues.hasMany(IssuesIntervals);
 IssuesIntervals.belongsTo(Issues);
 
+Issues.hasMany(FilesIntervals);
+FilesIntervals.belongsTo(Issues);
+
 /* DB SYNC */
 Users.sync();
 Issues.sync();
@@ -91,5 +95,6 @@ Intervals.sync();
 module.exports = {
 	db,
 	Users,
-	Issues
+	Issues,
+	Intervals
 };
