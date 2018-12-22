@@ -43,7 +43,7 @@ app.get('/login', (req, res) => {
 //Post
 app.post('/api/vsCode', (req, res) => {
 	const userName = req.body.userName;
-	const interval = req.body.interval;
+	const dailyInterval = req.body.interval;
 	const data = req.body.data;
 	//initially taking object keys from raw data -> data will be reassigned after Issues query to capture Issue ID from DB
 	let issues = Object.keys(data);
@@ -54,7 +54,7 @@ app.post('/api/vsCode', (req, res) => {
 	})
 		.then(results => {
 			trueIntervalNum = results[0][0][0].trueIntervalNum;
-			let intervalObj = { userName, interval, trueIntervalNum };
+			let intervalObj = { userName, dailyInterval, trueIntervalNum };
 			return Intervals.create(intervalObj);
 		})
 		.then(results => {
@@ -67,11 +67,65 @@ app.post('/api/vsCode', (req, res) => {
 			//return query Issues (for IssuesId).then
 		})
 		.then(results => {
-			//console.log(results[0].dataValues);
 			// reassign issues to be of { id, title }
 			issues = results.map(issue => ({ id: issue.id, title: issue.title }));
-			console.log(issues);
-			//write Issues Interval
+			// query issuesInterval table for the last issue id (based on Created at)
+
+			for (var i = 0; i < issues.length; i++) {
+				var entry = data[issues[i].title];
+
+				// issuesInterval entry
+				var issuesIntervalsObj = {
+					issueId: issues[i].id,
+					intervalId,
+					userName,
+					dailyInterval,
+					trueIntervalNum,
+					active: 0,
+					idle: 0,
+					wordCount: 0
+				};
+
+				for (var filePath in entry) {
+					// filesInterval entry
+					var filesIntervalObj = {
+						issueId: issues[i].id,
+						intervalId,
+						userName,
+						dailyInterval,
+						trueIntervalNum,
+						filePath
+					};
+
+					for (var status in entry[filePath]) {
+						filesIntervalObj.status = status;
+
+						for (var info in entry[filePath][status]) {
+							filesIntervalObj[info] = entry[filePath][status][info];
+
+							//store interval data
+							if (info === 'active')
+								issuesIntervalsObj.active += filesIntervalObj[info];
+							if (info === 'idle')
+								issuesIntervalsObj.idle += filesIntervalObj[info];
+							if (info === 'wordCount')
+								issuesIntervalsObj.wordCount += filesIntervalObj[info];
+						}
+						//save FilesInterval HERE
+						//console.table(filesIntervalObj);
+					}
+				}
+
+				// async await issue intervals info (example data below..)
+				var priorActive = (issuesIntervalsObj.priorActive = 25);
+				var priorIdle = (issuesIntervalsObj.priorIdle = 25);
+
+				issuesIntervalsObj.totalActive =
+					issuesIntervalsObj.active + priorActive;
+				issuesIntervalsObj.totalIdle = issuesIntervalsObj.idle + priorIdle;
+				// save IssuesInterval HERE
+				console.log(issuesIntervalsObj);
+			}
 		});
 });
 
