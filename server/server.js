@@ -11,7 +11,14 @@ const gitHub = require('./utils/github/github');
 
 // SQLIZE & DB Connection
 const Sequelize = require('sequelize');
-const { db, Users, Intervals, Issues } = require('../database/database');
+const {
+	db,
+	Users,
+	Intervals,
+	Issues,
+	IssuesIntervals,
+	FilesIntervals
+} = require('../database/database');
 if (process.env !== 'production') {
 	require('dotenv').config();
 }
@@ -66,17 +73,17 @@ app.post('/api/vsCode', (req, res) => {
 			//write File Intervals.catch(err);
 			//return query Issues (for IssuesId).then
 		})
-		.then(results => {
+		.then(async results => {
 			// reassign issues to be of { id, title }
 			issues = results.map(issue => ({ id: issue.id, title: issue.title }));
 			// query issuesInterval table for the last issue id (based on Created at)
 
-			for (var i = 0; i < issues.length; i++) {
-				var entry = data[issues[i].title];
-
+			for (let i = 0; i < issues.length; i++) {
+				let entry = data[issues[i].title];
+				let issueId = issues[i].id;
 				// issuesInterval entry
-				var issuesIntervalsObj = {
-					issueId: issues[i].id,
+				let issuesIntervalsObj = {
+					issueId,
 					intervalId,
 					userName,
 					dailyInterval,
@@ -86,10 +93,10 @@ app.post('/api/vsCode', (req, res) => {
 					wordCount: 0
 				};
 
-				for (var filePath in entry) {
+				for (let filePath in entry) {
 					// filesInterval entry
-					var filesIntervalObj = {
-						issueId: issues[i].id,
+					let filesIntervalObj = {
+						issueId,
 						intervalId,
 						userName,
 						dailyInterval,
@@ -97,10 +104,10 @@ app.post('/api/vsCode', (req, res) => {
 						filePath
 					};
 
-					for (var status in entry[filePath]) {
+					for (let status in entry[filePath]) {
 						filesIntervalObj.status = status;
 
-						for (var info in entry[filePath][status]) {
+						for (let info in entry[filePath][status]) {
 							filesIntervalObj[info] = entry[filePath][status][info];
 
 							//store interval data
@@ -112,19 +119,36 @@ app.post('/api/vsCode', (req, res) => {
 								issuesIntervalsObj.wordCount += filesIntervalObj[info];
 						}
 						//save FilesInterval HERE
-						//console.table(filesIntervalObj);
+						FilesIntervals.create(filesIntervalObj).catch(err =>
+							console.error(err)
+						);
 					}
 				}
 
-				// async await issue intervals info (example data below..)
-				var priorActive = (issuesIntervalsObj.priorActive = 25);
-				var priorIdle = (issuesIntervalsObj.priorIdle = 25);
+				// async await to obtain prior time information
+				let priorInterval = await IssuesIntervals.findOne({
+					where: { issueId },
+					attributes: ['totalActive', 'totalIdle'],
+					order: [['createdAt', 'DESC']]
+				}).then(results => {
+					return results === null
+						? { priorActive: 0, priorIdle: 0 }
+						: {
+								priorActive: results.totalActive,
+								priorIdle: results.totalIdle
+						  };
+				});
 
+				issuesIntervalsObj.priorActive = priorInterval.priorActive;
+				issuesIntervalsObj.priorIdle = priorInterval.priorIdle;
 				issuesIntervalsObj.totalActive =
-					issuesIntervalsObj.active + priorActive;
-				issuesIntervalsObj.totalIdle = issuesIntervalsObj.idle + priorIdle;
+					issuesIntervalsObj.active + priorInterval.priorActive;
+				issuesIntervalsObj.totalIdle =
+					issuesIntervalsObj.idle + priorInterval.priorIdle;
 				// save IssuesInterval HERE
-				console.log(issuesIntervalsObj);
+				IssuesIntervals.create(issuesIntervalsObj).catch(error =>
+					console.error(error)
+				);
 			}
 		});
 });

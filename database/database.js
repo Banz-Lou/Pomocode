@@ -49,7 +49,7 @@ const FilesIntervals = db.define('files_intervals', {
 const Intervals = db.define('intervals', {
 	userName: Sequelize.STRING,
 	trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
-	interval: Sequelize.INTEGER
+	dailyInterval: Sequelize.INTEGER
 });
 
 const Issues = db.define('issues', {
@@ -96,5 +96,7 @@ module.exports = {
 	db,
 	Users,
 	Issues,
-	Intervals
+	Intervals,
+	IssuesIntervals,
+	FilesIntervals
 };
