@@ -2,12 +2,18 @@ const express = require('express');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 
+//  Server-Side
+import React from 'react';
+import { renderToString } from 'react-dom/server';
+import { ServerLocation } from '@reach/router';
+import fs from 'fs';
+
 // Authentication and Authorization
-const oauth = require('./utils/authenticate');
-const { access } = require('./utils/authorize');
+const oauth = require('../../server/utils/authenticate');
+const { access } = require('../../server/utils/authorize');
 
 // GitHub Data fetch
-const gitHub = require('./utils/github/github');
+const gitHub = require('../../server/utils/github/github');
 
 // SQLIZE & DB Connection
 const Sequelize = require('sequelize');
@@ -18,7 +24,7 @@ const {
   Issues,
   IssuesIntervals,
   FilesIntervals
-} = require('../database/database');
+} = require('../../database/database');
 if (process.env !== 'production') {
   require('dotenv').config();
 }

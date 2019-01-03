@@ -4,11 +4,13 @@
   "description": "pomocode production version",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "server": "nodemon server/server.js",
     "start": "node server/server.js",
     "dev": "webpack-dev-server --env.mode development --watch --hot",
-    "build": "webpack"
+    "build": "webpack",
+    "ssr": "babel-node server/index.js",
+    "test": "babel server/server.js -d dist",
+    "testz": "npm run test && node dist/server/server.js"
   },
   "repository": {
     "type": "git",
@@ -26,13 +28,16 @@
   "homepage": "https://github.com/Banz-Lou/Pomocode#readme",
   "dependencies": {
     "@emotion/core": "^10.0.2",
+    "@reach/router": "^1.2.1",
     "axios": "^0.18.0",
     "babel": "^6.23.0",
+    "babel-cli": "^6.26.0",
     "babel-jest": "^23.6.0",
+    "babel-preset-env": "^1.7.0",
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "eslint-plugin-jest": "^21.23.0",
-    "express": "^4.16.3",
+    "express": "^4.16.4",
     "express-session": "^1.15.6",
     "graphql": "^14.0.2",
     "html-webpack-plugin": "^3.2.0",
@@ -45,7 +50,6 @@
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",
-    "react-router": "^4.3.1",
     "react-test-renderer": "^16.5.2",
     "redux": "^4.0.0",
     "sequelize": "^4.39.0",
