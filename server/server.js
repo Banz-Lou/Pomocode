@@ -5,8 +5,12 @@ const bodyParser = require('body-parser');
 //  Server-Side
 import React from 'react';
 import { renderToString } from 'react-dom/server';
+//this allows us the backend to handle client side routing (if we use it)
 import { ServerLocation } from '@reach/router';
 import fs from 'fs';
+
+const html = fs.readFileSync('dist/index.html').toString();
+const parts = html.split('not rendered');
 
 // Authentication and Authorization
 const oauth = require('../../server/utils/authenticate');
@@ -31,6 +35,13 @@ if (process.env !== 'production') {
 
 const app = express();
 const { PORT } = process.env;
+
+app.use(express.static('../dist/index.html'));
+
+app.use((req, res) => {
+  const reactMarkup = <App />;
+  res.send(`${parts[0]}${renderToString(reactMarkkup)}${parts[1]}`);
+});
 
 app.use(
   session({
