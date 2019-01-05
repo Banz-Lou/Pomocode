@@ -10,7 +10,7 @@
     "build": "webpack",
     "ssr": "babel-node server/index.js",
     "test": "babel server/server.js -d dist",
-    "testz": "npm run test && node dist/server/server.js"
+    "testz": "npm run test && babel-node dist/server/server.js"
   },
   "repository": {
     "type": "git",
@@ -34,6 +34,7 @@
     "babel-cli": "^6.26.0",
     "babel-jest": "^23.6.0",
     "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "eslint-plugin-jest": "^21.23.0",
@@ -55,7 +56,8 @@
     "sequelize": "^4.39.0",
     "sql": "^0.78.0",
     "webpack": "^4.20.2",
-    "webpack-dev-server": "^3.1.9"
+    "webpack-dev-server": "^3.1.9",
+    "babel-plugin-transform-class-properties": "^6.24.1"
   },
   "devDependencies": {
     "@babel/core": "^7.1.2",
