@@ -5,9 +5,9 @@ const path = require('path');
 
 //  Server-Side
 import React from 'react';
-import { renderToString } from 'react-dom/server';
+import { renderToNodeStream } from 'react-dom/server';
 //this allows us the backend to handle client side routing (if we use it)
-import { ServerLocation } from '@reach/router';
+// import { ServerLocation } from '@reach/router';
 import fs from 'fs';
 import App from '../../src/components/App';
 
@@ -38,16 +38,20 @@ if (process.env !== 'production') {
 const app = express();
 const { PORT } = process.env;
 
-app.use('/dashboard', express.static(path.join(__dirname, '/../index.html')));
+// app.use(express.static(path.join(__dirname, '/../index.html')));
 
 app.use((req, res) => {
-	const reactMarkup = (
-		<ServerLocation url={req.url}>
-			<App />
-		</ServerLocation>
+	res.write(parts[0]);
+	const reactMarkup = <App />;
+	const stream = renderToNodeStream(reactMarkup);
+	stream.pipe(
+		res,
+		{ end: false }
 	);
-	res.send(`${parts[0]}${renderToString(reactMarkup)}${parts[1]}`);
-	res.end();
+	stream.on('end', () => {
+		res.write(parts[1]);
+		res.end();
+	});
 });
 
 app.use(

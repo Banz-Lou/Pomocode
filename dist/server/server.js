@@ -6,8 +6,6 @@ var _react2 = _interopRequireDefault(_react);
 
 var _server = require('react-dom/server');
 
-var _router = require('@reach/router');
-
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -28,6 +26,7 @@ var path = require('path');
 //  Server-Side
 
 //this allows us the backend to handle client side routing (if we use it)
+// import { ServerLocation } from '@reach/router';
 
 
 var html = _fs2.default.readFileSync('dist/index.html').toString();
@@ -62,17 +61,17 @@ if (process.env !== 'production') {
 var app = express();
 var PORT = process.env.PORT;
 
-
-app.use('/dashboard', express.static(path.join(__dirname, '/../index.html')));
+// app.use(express.static(path.join(__dirname, '/../index.html')));
 
 app.use(function (req, res) {
-	var reactMarkup = _react2.default.createElement(
-		_router.ServerLocation,
-		{ url: req.url },
-		_react2.default.createElement(_App2.default, null)
-	);
-	res.send('' + parts[0] + (0, _server.renderToString)(reactMarkup) + parts[1]);
-	res.end();
+	res.write(parts[0]);
+	var reactMarkup = _react2.default.createElement(_App2.default, null);
+	var stream = (0, _server.renderToNodeStream)(reactMarkup);
+	stream.pipe(res, { end: false });
+	stream.on('end', function () {
+		res.write(parts[1]);
+		res.end();
+	});
 });
 
 app.use(session({
