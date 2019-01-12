@@ -8,9 +8,8 @@
     "start": "node server/server.js",
     "dev": "webpack-dev-server --env.mode development --watch --hot",
     "build": "webpack",
-    "ssr": "babel-node server/index.js",
-    "test": "babel server/server.js -d dist",
-    "testz": "npm run test && babel-node dist/server/server.js"
+    "test": "babel server/server.js --watch -d dist",
+    "ssr": "babel-node dist/server.js"
   },
   "repository": {
     "type": "git",
@@ -27,14 +26,12 @@
   },
   "homepage": "https://github.com/Banz-Lou/Pomocode#readme",
   "dependencies": {
+    "@babel/node": "^7.2.2",
     "@emotion/core": "^10.0.2",
     "@reach/router": "^1.2.1",
     "axios": "^0.18.0",
-    "babel": "^6.23.0",
-    "babel-cli": "^6.26.0",
     "babel-jest": "^23.6.0",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-react": "^6.24.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "body-parser": "^1.18.3",
     "dotenv": "^6.0.0",
     "eslint-plugin-jest": "^21.23.0",
@@ -56,10 +53,10 @@
     "sequelize": "^4.39.0",
     "sql": "^0.78.0",
     "webpack": "^4.20.2",
-    "webpack-dev-server": "^3.1.9",
-    "babel-plugin-transform-class-properties": "^6.24.1"
+    "webpack-dev-server": "^3.1.14"
   },
   "devDependencies": {
+    "@babel/cli": "^7.2.3",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-react": "^7.0.0",

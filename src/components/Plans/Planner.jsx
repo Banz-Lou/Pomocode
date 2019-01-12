@@ -1,15 +1,15 @@
 import React, { Component } from 'react';
 
 const data = [
-  {
-    nameWithOwner: 'Fred/octocat'
-  },
-  {
-    nameWithOwner: 'Mike/octocat'
-  },
-  {
-    nameWithOwner: 'Pomocode/Pomocode'
-  }
+	{
+		nameWithOwner: 'Fred/octocat'
+	},
+	{
+		nameWithOwner: 'Mike/octocat'
+	},
+	{
+		nameWithOwner: 'Pomocode/Pomocode'
+	}
 ];
 
 //
@@ -31,33 +31,33 @@ const data = [
 //
 
 class Planner extends Component {
-  render() {
-    return (
-      <div>
-        "PLANNER"
-        <div>
-          <select>
-            {data.map(repo => {
-              return <option>{repo.nameWithOwner}</option>;
-            })}
-          </select>
-        </div>
-        <div>
-          <select>
-            {data.map(repo => {
-              return <option>{repo.nameWithOwner}</option>;
-            })}
-          </select>
-        </div>
-        <div>
-          <span>SelectedIssueName</span>
-          <div>Description</div>
-          <div>Calendar</div>
-          <div>Hours</div>
-        </div>
-      </div>
-    );
-  }
+	render() {
+		return (
+			<div>
+				"PLANNER"
+				<div>
+					<select>
+						{data.map(repo => {
+							return <option>{repo.nameWithOwner}</option>;
+						})}
+					</select>
+				</div>
+				<div>
+					<select>
+						{data.map(repo => {
+							return <option>{repo.nameWithOwner}</option>;
+						})}
+					</select>
+				</div>
+				<div>
+					<span>SelectedIssueName</span>
+					<div>Description</div>
+					<div>Calendar</div>
+					<div>Hours</div>
+				</div>
+			</div>
+		);
+	}
 }
 
 export default Planner;

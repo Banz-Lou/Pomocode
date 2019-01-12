@@ -9,17 +9,17 @@ import { renderToNodeStream } from 'react-dom/server';
 //this allows us the backend to handle client side routing (if we use it)
 // import { ServerLocation } from '@reach/router';
 import fs from 'fs';
-import App from '../../src/components/App';
+import App from '../src/components/App';
 
 const html = fs.readFileSync('dist/index.html').toString();
 const parts = html.split('not rendered');
 
 // Authentication and Authorization
-const oauth = require('../../server/utils/authenticate');
-const { access } = require('../../server/utils/authorize');
+const oauth = require('../server/utils/authenticate');
+const { access } = require('../server/utils/authorize');
 
 // GitHub Data fetch
-const gitHub = require('../../server/utils/github/github');
+const gitHub = require('../server/utils/github/github');
 
 // SQLIZE & DB Connection
 const Sequelize = require('sequelize');
@@ -30,14 +30,15 @@ const {
 	Issues,
 	IssuesIntervals,
 	FilesIntervals
-} = require('../../database/database');
+} = require('../database/database');
 if (process.env !== 'production') {
 	require('dotenv').config();
 }
 
 const app = express();
 const { PORT } = process.env;
-
+const FRED = 'FRED';
+const MIKE = 'MIKE';
 // app.use(express.static(path.join(__dirname, '/../index.html')));
 
 app.use((req, res) => {
