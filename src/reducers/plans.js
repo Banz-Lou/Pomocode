@@ -1,7 +1,6 @@
 // plans: {
 //   repos: [{}, {}, ...] //load ALL repos
 //   issues: [{}, {}, ...] //pre-load ALL issues
-//   selectedRepo: {} OR repo.id
 //   selectedIssue: {} OR issue.id
 //   seconds: integer
 //   dates: date range
@@ -15,7 +14,35 @@ import {
 	SET_PLANS_DATE
 } from '../actions';
 
-export default function plans(state = [], action) {
+let testData = {
+	repos: [
+		{
+			nameWithOwner: 'SUPERMAN/octocat'
+		},
+		{
+			nameWithOwner: 'Mike/octocat'
+		},
+		{
+			nameWithOwner: 'Pomocode/Pomocode'
+		}
+	],
+	issues: [
+		{
+			nameWithOwner: 'issue1'
+		},
+		{
+			nameWithOwner: 'issue2'
+		},
+		{
+			nameWithOwner: 'issue3'
+		}
+	],
+	selectedIssue: { title: 'Title', description: 'description' },
+	seconds: 0,
+	dates: 0
+};
+
+export default function plans(state = testData, action) {
 	switch (action.type) {
 		case SET_PLANS_REPOS:
 			return state;

@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 
 const data = [
 	{
-		nameWithOwner: 'Fred/octocat'
+		nameWithOwner: 'SUPERMAN/octocat'
 	},
 	{
 		nameWithOwner: 'Mike/octocat'
@@ -30,34 +31,34 @@ const data = [
 //  ------ Receive the latest Planned Issues list (dispatch action)
 //
 
-class Planner extends Component {
-	render() {
-		return (
-			<div>
-				"PLANNER"
-				<div>
-					<select>
-						{data.map(repo => {
-							return <option>{repo.nameWithOwner}</option>;
-						})}
-					</select>
-				</div>
-				<div>
-					<select>
-						{data.map(repo => {
-							return <option>{repo.nameWithOwner}</option>;
-						})}
-					</select>
-				</div>
-				<div>
-					<span>SelectedIssueName</span>
-					<div>Description</div>
-					<div>Calendar</div>
-					<div>Hours</div>
-				</div>
-			</div>
-		);
-	}
-}
+const Planner = ({ plans }) => (
+	<div>
+		"PLANNER"
+		<div>
+			<select>
+				{plans.repos.map(repo => {
+					return <option>{repo.nameWithOwner}</option>;
+				})}
+			</select>
+		</div>
+		<div>
+			<select>
+				{plans.issues.map(issue => {
+					return <option>{issue.nameWithOwner}</option>;
+				})}
+			</select>
+		</div>
+		<div>
+			<span>{plans.selectedIssue.title}</span>
+			<div>{plans.selectedIssue.description}</div>
+			<div>{plans.dates}</div>
+			<div>{plans.seconds}</div>
+		</div>
+	</div>
+);
 
-export default Planner;
+const mapStateToProps = state => ({
+	plans: state.plans
+});
+
+export default connect(mapStateToProps)(Planner);

@@ -1,14 +1,18 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Interval from './Interval';
 
-var IntervalsContainer = ({ data }) => {
+var IntervalsContainer = ({ intervals }) => {
 	return (
 		<div>
-			{data.map(item => (
+			{intervals.map(item => (
 				<Interval item={item} />
 			))}
 		</div>
 	);
 };
 
-export default IntervalsContainer;
+const mapStateToProps = state => ({
+	intervals: state.intervals
+});
+export default connect(mapStateToProps)(IntervalsContainer);
