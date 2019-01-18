@@ -1,12 +1,12 @@
 import React from 'react';
-import { PlansList } from './PlansList';
+import ActiveIssues from './ ActiveIssues';
 import Planner from './Planner';
 
-var PlansContainer = () => {
+const PlansContainer = () => {
   return (
     <div>
       <Planner />
-      <PlansList />
+      <ActiveIssues />
     </div>
   );
 };
