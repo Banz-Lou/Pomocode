@@ -17,6 +17,7 @@ var App = () => {
 				<DetailsContainer />
 				<PlansContainer />
 				<StackedChart />
+				<div>test</div>
 			</div>
 		</Provider>
 	);
