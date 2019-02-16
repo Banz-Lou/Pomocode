@@ -4,7 +4,7 @@ import Planner from './Planner';
 
 const PlansContainer = () => {
 	return (
-		<div id="planning">
+		<div id="planning" className="inner-sub-container">
 			<Planner />
 			<ActiveIssues />
 		</div>

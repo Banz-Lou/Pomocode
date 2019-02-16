@@ -4,7 +4,7 @@ import { DetailsStats } from './DetailsStats';
 
 var DetailsContainer = () => {
 	return (
-		<div id="details">
+		<div id="details" className="inner-sub-container">
 			<DetailsGraph />
 			<DetailsStats />
 		</div>

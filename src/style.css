@@ -1,0 +1,53 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+header {
+  margin: 0 0;
+}
+
+div {
+  margin: 0 0;
+}
+
+#root {
+  border: 1px solid violet;
+  min-height: 98vh;
+}
+
+header {
+  border: 1px solid red;
+  height: 100px;
+}
+
+#container {
+  border: 5px solid blue;
+  min-height: 100%;
+}
+
+.sub-container {
+  border: 2px solid gold;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.inner-sub-container {
+  border: 1px solid green;
+  width: 50%;
+}
+
+/* Responsive Design */
+@media only screen and (max-width: 620px) {
+  /* mobile phones */
+  .sub-container {
+    flex-direction: column;
+  }
+  .inner-sub-container {
+    border: 1px solid green;
+    width: 100%;
+  }
+}

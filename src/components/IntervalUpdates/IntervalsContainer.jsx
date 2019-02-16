@@ -4,7 +4,7 @@ import Interval from './Interval';
 
 var IntervalsContainer = ({ intervals }) => {
 	return (
-		<div id="intervals">
+		<div id="intervals" className="inner-sub-container">
 			{intervals.map(item => (
 				<Interval item={item} />
 			))}

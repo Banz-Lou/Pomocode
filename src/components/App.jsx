@@ -11,15 +11,15 @@ var App = () => {
 	return (
 		<Provider store={store}>
 			<React.Fragment>
-				<div id="header">Header</div>
+				<header>Header</header>
 				<div id="container">
 					<div className="sub-container">
 						<IntervalsContainer />
 						<DetailsContainer />
 					</div>
 					<div className="sub-container">
-						<HistoricalContainer />
 						<PlansContainer />
+						<HistoricalContainer />
 					</div>
 				</div>
 			</React.Fragment>
