@@ -3,12 +3,12 @@ import ActiveIssues from './ ActiveIssues';
 import Planner from './Planner';
 
 const PlansContainer = () => {
-  return (
-    <div>
-      <Planner />
-      <ActiveIssues />
-    </div>
-  );
+	return (
+		<div id="planning">
+			<Planner />
+			<ActiveIssues />
+		</div>
+	);
 };
 
 export default PlansContainer;

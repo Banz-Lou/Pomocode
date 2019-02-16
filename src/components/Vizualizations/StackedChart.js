@@ -50,6 +50,15 @@ class StackedChart extends Component {
 		lineArea: []
 	};
 
+	//create a new object
+	
+		// keys: ['apples', 'bananas', 'cherries', 'dates']
+		// colors: ["rgy1324","rgy1324","rgy1324","rgy1324"]
+	
+
+	
+
+
 	xAxis = d3.axisBottom();
 	yAxis = d3.axisLeft();
 

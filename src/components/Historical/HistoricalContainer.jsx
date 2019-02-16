@@ -4,7 +4,7 @@ import { HistoricalStats } from './HistoricalStats';
 
 var HistoricalContainer = () => {
 	return (
-		<div id="historical-container">
+		<div id="historical">
 			<HistoricalGraph />
 			<HistoricalStats />
 		</div>

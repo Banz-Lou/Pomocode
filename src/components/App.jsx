@@ -3,7 +3,6 @@ import IntervalsContainer from './IntervalUpdates/IntervalsContainer';
 import HistoricalContainer from './Historical/HistoricalContainer';
 import DetailsContainer from './Details/DetailsContainer';
 import PlansContainer from './Plans/PlansContainer';
-import StackedChart from './Vizualizations/StackedChart';
 
 import { Provider } from 'react-redux';
 import store from '../store';
@@ -11,14 +10,19 @@ import store from '../store';
 var App = () => {
 	return (
 		<Provider store={store}>
-			<div id="container">
-				<IntervalsContainer />
-				<HistoricalContainer />
-				<DetailsContainer />
-				<PlansContainer />
-				<StackedChart />
-				<div>test</div>
-			</div>
+			<React.Fragment>
+				<div id="header">Header</div>
+				<div id="container">
+					<div className="sub-container">
+						<IntervalsContainer />
+						<DetailsContainer />
+					</div>
+					<div className="sub-container">
+						<HistoricalContainer />
+						<PlansContainer />
+					</div>
+				</div>
+			</React.Fragment>
 		</Provider>
 	);
 };
