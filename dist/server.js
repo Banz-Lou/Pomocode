@@ -55,7 +55,7 @@ var PORT = process.env.PORT;
 var FRED = 'FRED';
 var MIKE = 'MIKE'; // app.use(express.static(path.join(__dirname, '/../index.html')));
 
-app.use(function (req, res) {
+app.get('/', function (req, res) {
   res.write(parts[0]);
 
   var reactMarkup = _react.default.createElement(_App.default, null);
@@ -88,7 +88,8 @@ app.get('/login', function (req, res) {
 app.post('/api/vsCode', function (req, res) {
   var userName = req.body.userName;
   var dailyInterval = req.body.interval;
-  var data = req.body.data; // issues get rewritten as an array of {id: id, title: title}
+  var data = req.body.data;
+  console.log('SOME LARGE STRING BIG AND LONG'); // issues get rewritten as an array of {id: id, title: title}
 
   var issues = Object.keys(data);
   var trueIntervalNum, intervalId; // incrementing true interval num; Users is source of truth for trueIntervalNum
