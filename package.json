@@ -8,7 +8,7 @@
     "start": "node server/server.js",
     "dev": "webpack-dev-server --env.mode development --watch --hot",
     "build": "webpack",
-    "test": "babel server/server.js --watch -d dist",
+    "serverbuild": "babel server/server.js --watch -d dist",
     "ssr": "babel-node dist/server.js"
   },
   "repository": {
