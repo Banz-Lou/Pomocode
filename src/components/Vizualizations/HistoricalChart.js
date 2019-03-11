@@ -39,12 +39,10 @@ const keys = data.columns.slice(1);
 
 class HistoricalChart extends Component {
 	state = {
-		bars: [],
-		lineGraph: [],
-		lineArea: []
+		bars: []
 	};
 
-	static getDerivedStatesFromProps(nextProps, prevState) {
+	static getDerivedStateFromProps(nextProps, prevState) {
 		var x0 = d3
 			.scaleBand()
 			.domain(data.map(d => d.issue))
@@ -62,9 +60,26 @@ class HistoricalChart extends Component {
 			.domain([0, d3.max(data, d => d3.max(keys, key => d[key]))])
 			.nice()
 			.rangeRound([height - margin.bottom, margin.top]);
+
+		const bars = data.map(d => {
+			return {
+				x: x1(d.issue),
+				y: y(d.planned),
+				height: y(0) - y(d.planned)
+			};
+		});
+		console.log(bars);
+		return { bars };
 	}
+
 	render() {
-		return <svg width={width} height={height} />;
+		return (
+			<svg width={width} height={height}>
+				{this.state.bars.map(d => (
+					<rect x={d.x} y={d.y} width={10} height={d.height} />
+				))}
+			</svg>
+		);
 	}
 }
 

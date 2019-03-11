@@ -69,7 +69,7 @@ class BarChart extends Component {
 				fill: colorScale(d.avg)
 			};
 		});
-		// console.log(bars);
+		console.log(bars);
 		return { bars, xScale, yScale };
 	}
 

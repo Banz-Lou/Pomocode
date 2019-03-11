@@ -1,6 +1,7 @@
 import React from 'react';
-import StackedChart from '../Vizualizations/StackedChart';
+import HistoricalChart from '../Vizualizations/HistoricalChart';
+import Chart from '../Vizualizations/Chart';
 
 export var HistoricalGraph = () => {
-	return <StackedChart />;
+	return <HistoricalChart />;
 };
