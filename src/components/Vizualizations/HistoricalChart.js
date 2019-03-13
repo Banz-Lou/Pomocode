@@ -39,8 +39,12 @@ const keys = data.columns.slice(1);
 
 class HistoricalChart extends Component {
 	state = {
-		bars: []
+		bars: [],
+		containers: []
 	};
+
+	xAxis = d3.axisBottom();
+	yAxis = d3.axisLeft().tickFormat(d => `${d} hrs`);
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		var x0 = d3
@@ -61,23 +65,55 @@ class HistoricalChart extends Component {
 			.nice()
 			.rangeRound([height - margin.bottom, margin.top]);
 
+		var colors = {
+			planned: '#98abc5',
+			actual: '#ff8c00'
+		};
+
+		const containers = data.map(d => x0(d.issue));
+
 		const bars = data.map(d => {
-			return {
-				x: x1(d.issue),
-				y: y(d.planned),
-				height: y(0) - y(d.planned)
-			};
+			var subBars = [];
+			keys.forEach(key => {
+				subBars.push({
+					x: x1(key),
+					y: y(d[key]),
+					width: x1.bandwidth(),
+					height: y(0) - y(d[key]),
+					fill: colors[key]
+				});
+			});
+			return subBars;
 		});
-		console.log(bars);
-		return { bars };
+
+		return { bars, containers, x0, y };
+	}
+
+	componentDidMount() {
+		this.xAxis.scale(this.state.x0);
+		d3.select(this.refs.xAxis).call(this.xAxis);
+		this.yAxis.scale(this.state.y);
+		d3.select(this.refs.yAxis).call(this.yAxis);
 	}
 
 	render() {
 		return (
 			<svg width={width} height={height}>
-				{this.state.bars.map(d => (
-					<rect x={d.x} y={d.y} width={10} height={d.height} />
+				{this.state.containers.map((d, index) => (
+					<g transform={`translate(${d}, 0)`}>
+						{this.state.bars[index].map(bar => (
+							<rect
+								x={bar.x}
+								y={bar.y}
+								width={bar.width}
+								height={bar.height}
+								fill={bar.fill}
+							/>
+						))}
+					</g>
 				))}
+				<g ref="xAxis" transform={`translate(0, ${height - margin.bottom})`} />
+				<g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
 			</svg>
 		);
 	}
