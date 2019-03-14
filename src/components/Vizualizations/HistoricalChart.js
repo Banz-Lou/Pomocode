@@ -8,27 +8,32 @@ const data = [
 	{
 		issue: 'name',
 		planned: 10,
-		actual: 4
+		actual: 4,
+		difference: -60
 	},
 	{
 		issue: 'name1',
 		planned: 8,
-		actual: 7
+		actual: 7,
+		difference: 12.5
 	},
 	{
 		issue: 'name2',
 		planned: 7,
-		actual: 9
+		actual: 9,
+		difference: 28.6
 	},
 	{
 		issue: 'name3',
 		planned: 5,
-		actual: 5
+		actual: 5,
+		difference: 0
 	},
 	{
 		issue: 'name4',
-		planned: 10,
-		actual: 14
+		planned: 14,
+		actual: 10,
+		difference: -28.6
 	}
 ];
 data.columns = ['issue', 'planned', 'actual'];
@@ -47,23 +52,33 @@ class HistoricalChart extends Component {
 	yAxis = d3.axisLeft().tickFormat(d => `${d} hrs`);
 
 	static getDerivedStateFromProps(nextProps, prevState) {
+		//Creates scale for each set of bar's container
 		var x0 = d3
 			.scaleBand()
 			.domain(data.map(d => d.issue))
 			.rangeRound([margin.left, width - margin.right])
 			.paddingInner(0.1);
-
+		//Creates scales for rendered bars within each <g> container
 		var x1 = d3
 			.scaleBand()
 			.domain(keys)
 			.rangeRound([0, x0.bandwidth()])
 			.padding(0.05);
 
+		//Max between both planned and actual
+		var yScaleMax = d3.max(data, d => d3.max(keys, key => d[key]));
+		//Shifts xscale upwards by 1/2 of the max -> requirements for second Y axis (%)
+		var yScaleMin = yScaleMax / -2;
+
+		//Creates y scale for time
 		var y = d3
 			.scaleLinear()
-			.domain([0, d3.max(data, d => d3.max(keys, key => d[key]))])
+			.domain([yScaleMin, yScaleMax])
 			.nice()
 			.rangeRound([height - margin.bottom, margin.top]);
+
+		//Helper to identify where the new "0" point is on the Y-Axis
+		var xAxisPosition = y(0);
 
 		var colors = {
 			planned: '#98abc5',
@@ -86,7 +101,25 @@ class HistoricalChart extends Component {
 			return subBars;
 		});
 
-		return { bars, containers, x0, y };
+		//Min for % differences
+		var yPercentMin = d3.min(data, d => d.difference);
+
+		//Calculates the new Y- scaled ratio to keep the % Y-axis in line with shifted time Y-axis.
+		var multiplyer = Math.ceil(Math.abs(yPercentMin / yScaleMin));
+
+		var yPercentScale = d3
+			.scaleLinear()
+			.domain([yScaleMin * multiplyer, yScaleMax * multiplyer])
+			.nice()
+			.rangeRound([height - margin.bottom, margin.top]);
+
+		const line = d3
+			.line()
+			.x(d => x0(d.issue))
+			.y(d => yPercentScale(d.difference));
+
+		const lineGraph = line(data);
+		return { bars, containers, x0, y, xAxisPosition, lineGraph };
 	}
 
 	componentDidMount() {
@@ -112,8 +145,17 @@ class HistoricalChart extends Component {
 						))}
 					</g>
 				))}
-				<g ref="xAxis" transform={`translate(0, ${height - margin.bottom})`} />
+				<g
+					ref="xAxis"
+					transform={`translate(0, ${this.state.xAxisPosition})`}
+				/>
 				<g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
+				<path
+					d={this.state.lineGraph}
+					fill="none"
+					stroke="blue"
+					transform={`translate(${this.state.x0.bandwidth() / 2}, 0)`}
+				/>
 			</svg>
 		);
 	}
