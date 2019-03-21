@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import { HistDetDimensions } from './dimensions.js';
 
-const { width, height, margin } = HistDetDimensions;
+const { width, height, margin, colors } = HistDetDimensions;
 
 const data = [
 	{
@@ -36,11 +36,14 @@ const data = [
 		difference: -28.6
 	}
 ];
-data.columns = ['issue', 'planned', 'actual'];
+
+//TO DO:  Convert to dynamic using Object.keys.  !!Data from server should be in order issue->difference->planned->acutal
+data.columns = ['issue', 'difference', 'planned', 'actual'];
 data.y0 = 'Time';
 data.y1 = '%';
 
-const keys = data.columns.slice(1);
+const keys = data.columns.slice(2);
+const legendKeys = data.columns.slice(1);
 
 class HistoricalChart extends Component {
 	state = {
@@ -50,6 +53,7 @@ class HistoricalChart extends Component {
 
 	xAxis = d3.axisBottom();
 	yAxis = d3.axisLeft().tickFormat(d => `${d} hrs`);
+	yAxisRight = d3.axisRight().tickFormat(d => `${d}%`);
 
 	static getDerivedStateFromProps(nextProps, prevState) {
 		//Creates scale for each set of bar's container
@@ -79,11 +83,6 @@ class HistoricalChart extends Component {
 
 		//Helper to identify where the new "0" point is on the Y-Axis
 		var xAxisPosition = y(0);
-
-		var colors = {
-			planned: '#98abc5',
-			actual: '#ff8c00'
-		};
 
 		const containers = data.map(d => x0(d.issue));
 
@@ -119,7 +118,7 @@ class HistoricalChart extends Component {
 			.y(d => yPercentScale(d.difference));
 
 		const lineGraph = line(data);
-		return { bars, containers, x0, y, xAxisPosition, lineGraph };
+		return { bars, containers, x0, y, xAxisPosition, lineGraph, yPercentScale };
 	}
 
 	componentDidMount() {
@@ -127,6 +126,8 @@ class HistoricalChart extends Component {
 		d3.select(this.refs.xAxis).call(this.xAxis);
 		this.yAxis.scale(this.state.y);
 		d3.select(this.refs.yAxis).call(this.yAxis);
+		this.yAxisRight.scale(this.state.yPercentScale);
+		d3.select(this.refs.yAxisRight).call(this.yAxisRight);
 	}
 
 	render() {
@@ -150,12 +151,27 @@ class HistoricalChart extends Component {
 					transform={`translate(0, ${this.state.xAxisPosition})`}
 				/>
 				<g ref="yAxis" transform={`translate(${margin.left}, 0)`} />
+				<g
+					ref="yAxisRight"
+					transform={`translate(${width - margin.right}, 0)`}
+				/>
 				<path
 					d={this.state.lineGraph}
 					fill="none"
-					stroke="blue"
+					stroke={colors.difference}
 					transform={`translate(${this.state.x0.bandwidth() / 2}, 0)`}
 				/>
+				<g
+					ref="legend"
+					transform={`translate(${width / 2 - 100},${height - margin.bottom})`}
+				>
+					{legendKeys.map((d, i) => (
+						<g key={d} transform={`translate(${i * 80},0)`}>
+							<rect y="-13" width="20" height="20" fill={colors.d} />
+							<text transform={`translate(25,0)`}>{d}</text>
+						</g>
+					))}
+				</g>
 			</svg>
 		);
 	}
