@@ -16,87 +16,87 @@ db.authenticate()
 	});
 
 /* DB Schema */
-const Users = db.define('users', {
-	gitId: { type: Sequelize.STRING, unique: true },
-	userName: Sequelize.STRING,
-	trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 }
+const users = db.define('users', {
+	git_id: { type: Sequelize.STRING, unique: true },
+	user_name: Sequelize.STRING,
+	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 }
 });
 
-const IssuesIntervals = db.define('issues_intervals', {
-	userName: Sequelize.STRING,
-	dailyInterval: Sequelize.INTEGER,
-	trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
-	priorActive: Sequelize.INTEGER,
+const issues_intervals = db.define('issues_intervals', {
+	user_name: Sequelize.STRING,
+	daily_interval: Sequelize.INTEGER,
+	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 },
+	prior_active: Sequelize.INTEGER,
 	active: Sequelize.INTEGER,
-	totalActive: Sequelize.INTEGER,
-	priorIdle: Sequelize.INTEGER,
+	total_active: Sequelize.INTEGER,
+	prior_idle: Sequelize.INTEGER,
 	idle: Sequelize.INTEGER,
-	totalIdle: Sequelize.INTEGER,
-	wordCount: Sequelize.INTEGER
+	total_idle: Sequelize.INTEGER,
+	word_count: Sequelize.INTEGER
 });
 
-const FilesIntervals = db.define('files_intervals', {
-	userName: Sequelize.STRING,
-	dailyInterval: Sequelize.INTEGER,
-	trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
-	filePath: Sequelize.STRING,
+const files_intervals = db.define('files_intervals', {
+	user_name: Sequelize.STRING,
+	daily_interval: Sequelize.INTEGER,
+	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 },
+	file_path: Sequelize.STRING,
 	status: Sequelize.STRING,
 	active: Sequelize.INTEGER,
 	idle: Sequelize.INTEGER,
-	wordCount: Sequelize.INTEGER
+	word_count: Sequelize.INTEGER
 });
 
-const Intervals = db.define('intervals', {
-	userName: Sequelize.STRING,
-	trueIntervalNum: { type: Sequelize.INTEGER, defaultValue: 0 },
-	dailyInterval: Sequelize.INTEGER
+const intervals = db.define('intervals', {
+	user_name: Sequelize.STRING,
+	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 },
+	daily_interval: Sequelize.INTEGER
 });
 
-const Issues = db.define('issues', {
-	gitId: { type: Sequelize.STRING, unique: true },
-	repoURL: Sequelize.STRING,
-	repoNameWithOwner: Sequelize.STRING,
-	repoIssueNum: Sequelize.INTEGER,
+const issues = db.define('issues', {
+	git_id: { type: Sequelize.STRING, unique: true },
+	repo_url: Sequelize.STRING,
+	repo_name_with_owner: Sequelize.STRING,
+	repo_issue_num: Sequelize.INTEGER,
 	title: Sequelize.STRING,
 	body: Sequelize.TEXT('long'),
-	planSeconds: { type: Sequelize.INTEGER, defaultValue: null },
-	planStartDate: { type: Sequelize.DATEONLY, defaultValue: null },
-	planEndDate: { type: Sequelize.DATEONLY, defaultValue: null },
-	completeTime: {
+	plan_seconds: { type: Sequelize.INTEGER, defaultValue: null },
+	plan_start_date: { type: Sequelize.DATEONLY, defaultValue: null },
+	plan_end_date: { type: Sequelize.DATEONLY, defaultValue: null },
+	complete_time: {
 		type: Sequelize.INTEGER,
-		defaultValue: 0
+		default_value: 0
 	},
 	variance: { type: Sequelize.FLOAT, defaultValue: null }
 });
 
 /* FOREIGN KEYS */
-Users.hasMany(Issues);
-Issues.belongsTo(Users);
+users.hasMany(issues);
+issues.belongsTo(users);
 
-Intervals.hasMany(FilesIntervals);
-FilesIntervals.belongsTo(Intervals);
+intervals.hasMany(files_intervals);
+files_intervals.belongsTo(intervals);
 
-Intervals.hasMany(IssuesIntervals);
-IssuesIntervals.belongsTo(Intervals);
+intervals.hasMany(issues_intervals);
+issues_intervals.belongsTo(intervals);
 
-Issues.hasMany(IssuesIntervals);
-IssuesIntervals.belongsTo(Issues);
+issues.hasMany(issues_intervals);
+issues_intervals.belongsTo(issues);
 
-Issues.hasMany(FilesIntervals);
-FilesIntervals.belongsTo(Issues);
+issues.hasMany(files_intervals);
+files_intervals.belongsTo(issues);
 
 /* DB SYNC */
-Users.sync();
-Issues.sync();
-IssuesIntervals.sync();
-FilesIntervals.sync();
-Intervals.sync();
+users.sync();
+issues.sync();
+issues_intervals.sync();
+files_intervals.sync();
+intervals.sync();
 
 module.exports = {
 	db,
-	Users,
-	Issues,
-	Intervals,
-	IssuesIntervals,
-	FilesIntervals
+	users,
+	issues,
+	intervals,
+	issues_intervals,
+	files_intervals
 };

@@ -14,6 +14,8 @@ function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 var express = require('express');
 
 var session = require('express-session');
@@ -83,6 +85,28 @@ app.use('/query', gitHub); //Initial setup
 
 app.get('/login', function (req, res) {
   res.send('Please Login.');
+}); // GET the last 3 interval updates
+
+app.get('/api/intervalUpdates', function (req, res) {
+  // const userName = req.query.userName
+  //REMOVE THIS FOR PROD
+  var userName = 'fredricklou523';
+  Intervals.max('trueIntervalNum', {
+    where: {
+      userName: userName
+    }
+  }).then(function (max) {
+    //Defines number of intervals we want to pull
+    var oldestInterval = max - 3;
+    return IssuesIntervals.findAll({
+      where: {
+        userName: userName,
+        trueIntervalNum: _defineProperty({}, Sequelize.Op.gt, oldestInterval)
+      }
+    });
+  }).then(function (records) {
+    res.send(records);
+  });
 }); //Post
 
 app.post('/api/vsCode', function (req, res) {
