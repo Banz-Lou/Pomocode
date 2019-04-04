@@ -9,20 +9,20 @@ const { access } = require('../authorize');
 const { assignedIssues } = require('./queries');
 
 // db connection
-const { Users, Repositories, Issues } = require('../../../database/database');
+const { Users, Issues } = require('../../../database/database');
 
 const gitHubAPI = 'https://api.github.com/graphql';
 const APIHeader = { headers: null };
 
 router.get('/github', access, async (req, res) => {
-	const { accessToken, userName } = req.session.passport.user;
-	const query = assignedIssues(userName);
+	const { accessToken, user_name } = req.session.passport.user;
+	const query = assignedIssues(user_name);
 	APIHeader.headers = { Authorization: `bearer ${accessToken}` };
 
 	try {
 		const { data } = await axios.post(gitHubAPI, { query }, APIHeader);
 		const { nodes } = data.data.search;
-		const user = await Users.findOne({ where: { userName } });
+		const user = await Users.findOne({ where: { user_name } });
 
 		for (const issue of nodes) {
 			await writeIssues(issue);
@@ -30,13 +30,13 @@ router.get('/github', access, async (req, res) => {
 
 		async function writeIssues(issue) {
 			let issueObj = {
-				gitId: issue.id,
-				repoURL: issue.repository.url,
-				repoNameWithOwner: issue.repository.nameWithOwner,
-				repoIssueNum: issue.number,
+				git_id: issue.id,
+				repo_url: issue.repository.url,
+				repo_name_with_owner: issue.repository.nameWithOwner,
+				repo_issue_num: issue.number,
 				title: issue.title,
 				body: issue.body,
-				userId: user.id
+				user_id: user.id
 			};
 			await Issues.upsert(issueObj).catch(err => {
 				throw err;

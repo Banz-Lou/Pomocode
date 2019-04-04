@@ -45,8 +45,8 @@ var _require2 = require('../database/database'),
     Users = _require2.Users,
     Intervals = _require2.Intervals,
     Issues = _require2.Issues,
-    IssuesIntervals = _require2.IssuesIntervals,
-    FilesIntervals = _require2.FilesIntervals;
+    Issues_Intervals = _require2.Issues_Intervals,
+    Files_Intervals = _require2.Files_Intervals;
 
 if (process.env !== 'production') {
   require('dotenv').config();
@@ -90,18 +90,18 @@ app.get('/login', function (req, res) {
 app.get('/api/intervalUpdates', function (req, res) {
   // const userName = req.query.userName
   //REMOVE THIS FOR PROD
-  var userName = 'fredricklou523';
-  Intervals.max('trueIntervalNum', {
+  var user_name = 'fredricklou523';
+  Intervals.max('true_interval_num', {
     where: {
-      userName: userName
+      user_name: user_name
     }
   }).then(function (max) {
     //Defines number of intervals we want to pull
     var oldestInterval = max - 3;
-    return IssuesIntervals.findAll({
+    return Issues_Intervals.findAll({
       where: {
-        userName: userName,
-        trueIntervalNum: _defineProperty({}, Sequelize.Op.gt, oldestInterval)
+        user_name: user_name,
+        true_interval_num: _defineProperty({}, Sequelize.Op.gt, oldestInterval)
       }
     });
   }).then(function (records) {
@@ -110,24 +110,24 @@ app.get('/api/intervalUpdates', function (req, res) {
 }); //Post
 
 app.post('/api/vsCode', function (req, res) {
-  var userName = req.body.userName;
-  var dailyInterval = req.body.interval;
+  var user_name = req.body.userName;
+  var daily_interval = req.body.interval;
   var data = req.body.data;
   console.log('SOME LARGE STRING BIG AND LONG'); // issues get rewritten as an array of {id: id, title: title}
 
-  var issues = Object.keys(data);
-  var trueIntervalNum, intervalId; // incrementing true interval num; Users is source of truth for trueIntervalNum
+  var issuesList = Object.keys(data);
+  var true_interval_num, intervalId; // incrementing true interval num; Users is source of truth for trueIntervalNum
 
-  Users.increment('trueIntervalNum', {
+  Users.increment('true_interval_num', {
     where: {
-      userName: userName
+      user_name: user_name
     }
   }).then(function (results) {
-    trueIntervalNum = results[0][0][0].trueIntervalNum;
+    true_interval_num = results[0][0][0].true_interval_num;
     var intervalObj = {
-      userName: userName,
-      dailyInterval: dailyInterval,
-      trueIntervalNum: trueIntervalNum
+      user_name: user_name,
+      daily_interval: daily_interval,
+      true_interval_num: true_interval_num
     };
     return Intervals.create(intervalObj);
   }).then(function (results) {
@@ -135,7 +135,7 @@ app.post('/api/vsCode', function (req, res) {
     intervalId = results.dataValues.id;
     return Issues.findAll({
       where: {
-        title: issues
+        title: issuesList
       },
       attributes: ['id', 'title']
     });
@@ -145,13 +145,13 @@ app.post('/api/vsCode', function (req, res) {
     var _ref = _asyncToGenerator(
     /*#__PURE__*/
     regeneratorRuntime.mark(function _callee(results) {
-      var i, entry, issueId, issuesIntervalsObj, filePath, filesIntervalObj, status, info, priorInterval;
+      var i, entry, issueId, issuesIntervalsObj, file_path, filesIntervalObj, status, info, priorInterval;
       return regeneratorRuntime.wrap(function _callee$(_context) {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
               // reassign issues to be of { id, title }
-              issues = results.map(function (issue) {
+              issuesList = results.map(function (issue) {
                 return {
                   id: issue.id,
                   title: issue.title
@@ -162,48 +162,48 @@ app.post('/api/vsCode', function (req, res) {
               i = 0;
 
             case 2:
-              if (!(i < issues.length)) {
+              if (!(i < issuesList.length)) {
                 _context.next = 18;
                 break;
               }
 
-              entry = data[issues[i].title];
-              issueId = issues[i].id;
+              entry = data[issuesList[i].title];
+              issueId = issuesList[i].id;
               issuesIntervalsObj = {
                 issueId: issueId,
                 intervalId: intervalId,
-                userName: userName,
-                dailyInterval: dailyInterval,
-                trueIntervalNum: trueIntervalNum,
+                user_name: user_name,
+                daily_interval: daily_interval,
+                true_interval_num: true_interval_num,
                 active: 0,
                 idle: 0,
-                wordCount: 0
+                word_count: 0
               }; // for every file worked on per issue...
 
-              for (filePath in entry) {
+              for (file_path in entry) {
                 // filesInterval entry
                 filesIntervalObj = {
                   issueId: issueId,
                   intervalId: intervalId,
-                  userName: userName,
-                  dailyInterval: dailyInterval,
-                  trueIntervalNum: trueIntervalNum,
-                  filePath: filePath
+                  user_name: user_name,
+                  daily_interval: daily_interval,
+                  true_interval_num: true_interval_num,
+                  file_path: file_path
                 }; // for every status (Running/Break) per file...
 
-                for (status in entry[filePath]) {
+                for (status in entry[file_path]) {
                   filesIntervalObj.status = status; // for all info needed...
 
-                  for (info in entry[filePath][status]) {
-                    filesIntervalObj[info] = entry[filePath][status][info]; //store interval data
+                  for (info in entry[file_path][status]) {
+                    filesIntervalObj[info] = entry[file_path][status][info]; //store interval data
 
                     if (info === 'active') issuesIntervalsObj.active += filesIntervalObj[info];
                     if (info === 'idle') issuesIntervalsObj.idle += filesIntervalObj[info];
-                    if (info === 'wordCount') issuesIntervalsObj.wordCount += filesIntervalObj[info];
+                    if (info === 'word_count') issuesIntervalsObj.word_count += filesIntervalObj[info];
                   } //save FilesInterval HERE
 
 
-                  FilesIntervals.create(filesIntervalObj).catch(function (err) {
+                  Files_Intervals.create(filesIntervalObj).catch(function (err) {
                     return console.error(err);
                   });
                 }
@@ -211,31 +211,31 @@ app.post('/api/vsCode', function (req, res) {
 
 
               _context.next = 9;
-              return IssuesIntervals.findOne({
+              return Issues_Intervals.findOne({
                 where: {
                   issueId: issueId
                 },
-                attributes: ['totalActive', 'totalIdle'],
+                attributes: ['total_active', 'total_idle'],
                 order: [['createdAt', 'DESC']]
               }).then(function (results) {
                 return results === null ? {
-                  priorActive: 0,
-                  priorIdle: 0
+                  prior_active: 0,
+                  prior_idle: 0
                 } : {
-                  priorActive: results.totalActive,
-                  priorIdle: results.totalIdle
+                  prior_active: results.total_active,
+                  prior_idle: results.total_idle
                 };
               });
 
             case 9:
               priorInterval = _context.sent;
               // sum issue interval information (prior + current)
-              issuesIntervalsObj.priorActive = priorInterval.priorActive;
-              issuesIntervalsObj.priorIdle = priorInterval.priorIdle;
-              issuesIntervalsObj.totalActive = issuesIntervalsObj.active + priorInterval.priorActive;
-              issuesIntervalsObj.totalIdle = issuesIntervalsObj.idle + priorInterval.priorIdle; // save IssuesInterval HERE
+              issuesIntervalsObj.prior_active = priorInterval.prior_active;
+              issuesIntervalsObj.prior_idle = priorInterval.prior_idle;
+              issuesIntervalsObj.total_active = issuesIntervalsObj.active + priorInterval.prior_active;
+              issuesIntervalsObj.total_idle = issuesIntervalsObj.idle + priorInterval.prior_idle; // save IssuesInterval HERE
 
-              IssuesIntervals.create(issuesIntervalsObj).catch(function (error) {
+              Issues_Intervals.create(issuesIntervalsObj).catch(function (error) {
                 return console.error(error);
               });
 

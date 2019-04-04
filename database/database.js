@@ -16,13 +16,13 @@ db.authenticate()
 	});
 
 /* DB Schema */
-const users = db.define('users', {
+const Users = db.define('users', {
 	git_id: { type: Sequelize.STRING, unique: true },
 	user_name: Sequelize.STRING,
 	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 }
 });
 
-const issues_intervals = db.define('issues_intervals', {
+const Issues_Intervals = db.define('issues_intervals', {
 	user_name: Sequelize.STRING,
 	daily_interval: Sequelize.INTEGER,
 	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 },
@@ -35,7 +35,7 @@ const issues_intervals = db.define('issues_intervals', {
 	word_count: Sequelize.INTEGER
 });
 
-const files_intervals = db.define('files_intervals', {
+const Files_Intervals = db.define('files_intervals', {
 	user_name: Sequelize.STRING,
 	daily_interval: Sequelize.INTEGER,
 	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 },
@@ -46,13 +46,13 @@ const files_intervals = db.define('files_intervals', {
 	word_count: Sequelize.INTEGER
 });
 
-const intervals = db.define('intervals', {
+const Intervals = db.define('intervals', {
 	user_name: Sequelize.STRING,
 	true_interval_num: { type: Sequelize.INTEGER, defaultValue: 0 },
 	daily_interval: Sequelize.INTEGER
 });
 
-const issues = db.define('issues', {
+const Issues = db.define('issues', {
 	git_id: { type: Sequelize.STRING, unique: true },
 	repo_url: Sequelize.STRING,
 	repo_name_with_owner: Sequelize.STRING,
@@ -70,33 +70,33 @@ const issues = db.define('issues', {
 });
 
 /* FOREIGN KEYS */
-users.hasMany(issues);
-issues.belongsTo(users);
+Users.hasMany(Issues);
+Issues.belongsTo(Users);
 
-intervals.hasMany(files_intervals);
-files_intervals.belongsTo(intervals);
+Intervals.hasMany(Files_Intervals);
+Files_Intervals.belongsTo(Intervals);
 
-intervals.hasMany(issues_intervals);
-issues_intervals.belongsTo(intervals);
+Intervals.hasMany(Issues_Intervals);
+Issues_Intervals.belongsTo(Intervals);
 
-issues.hasMany(issues_intervals);
-issues_intervals.belongsTo(issues);
+Issues.hasMany(Issues_Intervals);
+Issues_Intervals.belongsTo(Issues);
 
-issues.hasMany(files_intervals);
-files_intervals.belongsTo(issues);
+Issues.hasMany(Files_Intervals);
+Files_Intervals.belongsTo(Issues);
 
 /* DB SYNC */
-users.sync();
-issues.sync();
-issues_intervals.sync();
-files_intervals.sync();
-intervals.sync();
+Users.sync();
+Issues.sync();
+Issues_Intervals.sync();
+Files_Intervals.sync();
+Intervals.sync();
 
 module.exports = {
 	db,
-	users,
-	issues,
-	intervals,
-	issues_intervals,
-	files_intervals
+	Users,
+	Issues,
+	Intervals,
+	Issues_Intervals,
+	Files_Intervals
 };

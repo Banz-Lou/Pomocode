@@ -24,12 +24,12 @@ passport.use(
 			// update(find) or create User in db
 			try {
 				await Users.upsert({
-					gitId: profile.id,
-					userName: profile.username
+					git_id: profile.id,
+					user_name: profile.username
 				});
 				return cb(null, {
 					accessToken,
-					userName: profile.username
+					user_name: profile.username
 				});
 			} catch (err) {
 				console.log('Failed to find user. Err:', err);
