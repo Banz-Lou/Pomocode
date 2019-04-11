@@ -14,6 +14,9 @@ const HistDetDimensions = {
 	}
 };
 
+const IntUpdDimensions = {};
+
 module.exports = {
-	HistDetDimensions
+	HistDetDimensions,
+	IntUpdDimensions
 };

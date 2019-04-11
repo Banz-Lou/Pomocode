@@ -1,7 +1,7 @@
 // intervals: [{}, {}, ...]  //top 5
 import { SET_INTERVALS } from '../actions';
 
-let testData = [[6, 6], [3, 3], [1, 2, 3], [1]];
+let testData = [[6, 6], [3, 3], [1, 2, 3]];
 
 // let rawQuery = [
 // 	{TrueIntervalNum: 1, },

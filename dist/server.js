@@ -88,9 +88,9 @@ app.get('/login', function (req, res) {
 }); // GET the last 3 interval updates
 
 app.get('/api/intervalUpdates', function (req, res) {
-  // const userName = req.query.userName
-  //REMOVE THIS FOR PROD
-  var user_name = 'fredricklou523';
+  var user_name = req.query.userName; //REMOVE THIS FOR PROD
+  // const user_name = 'fredricklou523';
+
   Intervals.max('true_interval_num', {
     where: {
       user_name: user_name
@@ -99,6 +99,10 @@ app.get('/api/intervalUpdates', function (req, res) {
     //Defines number of intervals we want to pull
     var oldestInterval = max - 3;
     return Issues_Intervals.findAll({
+      include: [{
+        model: Issues,
+        attributes: ['plan_seconds', 'issue_name']
+      }],
       where: {
         user_name: user_name,
         true_interval_num: _defineProperty({}, Sequelize.Op.gt, oldestInterval)
