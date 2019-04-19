@@ -84,7 +84,6 @@ class IntervalUpdatesChart extends Component {
 
   render() {
     return (
-<<<<<<< Updated upstream
       <svg width={width} height={height} style={{ border: "solid 5px" }}>
         <g>
           {this.state.planBars.map(d => (
@@ -98,21 +97,6 @@ class IntervalUpdatesChart extends Component {
               y={d.y + 10}
               width={d.width}
               height={10}
-=======
-      <svg width={width} height={height}>
-        <g transform="rotate(90 200 200)">
-          {this.state.planBars.map(d => (
-            <rect x={d.x} y={d.y} width={10} height={d.height} fill={d.fill} />
-          ))}
-        </g>
-        <g transform="rotate(90 200 200)">
-          {this.state.activeBars.map(d => (
-            <rect
-              x={d.x + 10}
-              y={d.y}
-              width={10}
-              height={d.height}
->>>>>>> Stashed changes
               fill={d.fill}
             />
           ))}
