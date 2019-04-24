@@ -14,19 +14,33 @@ const HistDetDimensions = {
   }
 };
 
+const [IntUpdDimensionsWidth, IntUpdDimensionsHeight] = [650, 100];
+
 const IntUpdDimensions = {
-  width: 650,
-  height: 100,
-  margin: { top: 20, right: 40, bottom: 20, left: 35 },
+  width: IntUpdDimensionsWidth,
+  height: IntUpdDimensionsHeight,
+  margin: {
+    top: 20,
+    right: IntUpdDimensionsWidth * 0.25,
+    bottom: 20,
+    left: 35
+  },
+  barHeight: 10,
   colors: {
     planned: "#98abc5",
     active: "#ff8c00",
     prior_active: "maroon"
   },
   legend: {
-    rect: 2,
-    spacing: 2,
-    height: 2
+    rectY: -11,
+    rectW: 10,
+    rectH: 10,
+    Plan: "#98abc5",
+    Active: "#ff8c00",
+    "Prior Active": "maroon",
+    positionX: IntUpdDimensionsWidth * 0.8,
+    positionY: IntUpdDimensionsHeight / 2 - 10,
+    keySpacing: 15
   }
 };
 

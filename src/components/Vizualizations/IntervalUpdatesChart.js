@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import * as d3 from "d3";
 import { IntUpdDimensions } from "./dimensions.js";
 
-const { width, height, margin, colors } = IntUpdDimensions;
+const { width, height, margin, colors, legend, barHeight } = IntUpdDimensions;
+const legendKeys = ["Plan", "Active", "Prior Active"];
 
 let data = [
   {
@@ -87,18 +88,40 @@ class IntervalUpdatesChart extends Component {
       <svg width={width} height={height} style={{ border: "solid 5px" }}>
         <g>
           {this.state.planBars.map(d => (
-            <rect x={d.x} y={d.y} width={d.width} height={10} fill={d.fill} />
+            <rect
+              x={d.x}
+              y={d.y - barHeight / 2}
+              width={d.width}
+              height={barHeight}
+              fill={d.fill}
+            />
           ))}
         </g>
         <g>
           {this.state.activeBars.map(d => (
             <rect
               x={d.x}
-              y={d.y + 10}
+              y={d.y + barHeight / 2}
               width={d.width}
-              height={10}
+              height={barHeight}
               fill={d.fill}
             />
+          ))}
+        </g>
+        <g
+          ref="legend"
+          transform={`translate(${legend.positionX},${legend.positionY})`}
+        >
+          {legendKeys.map((d, i) => (
+            <g key={d} transform={`translate(0, ${i * (legend.rectH + 5)})`}>
+              <rect
+                y={legend.rectY}
+                width={legend.rectW}
+                height={legend.rectH}
+                fill={legend[d]}
+              />
+              <text transform={`translate(25,0)`}>{d}</text>
+            </g>
           ))}
         </g>
       </svg>
