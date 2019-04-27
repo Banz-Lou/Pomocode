@@ -16,31 +16,34 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var express = require('express');
+var express = require("express");
 
-var session = require('express-session');
+var session = require("express-session");
 
-var bodyParser = require('body-parser');
+var bodyParser = require("body-parser");
 
-var path = require('path'); //  Server-Side
+var path = require("path"); //  Server-Side
 
 
-var html = _fs.default.readFileSync('dist/index.html').toString();
+var html = _fs.default.readFileSync("dist/index.html").toString();
 
-var parts = html.split('not rendered'); // Authentication and Authorization
+var parts = html.split("not rendered"); // Authentication and Authorization
 
-var oauth = require('../server/utils/authenticate');
+var oauth = require("../server/utils/authenticate");
 
-var _require = require('../server/utils/authorize'),
+var _require = require("../server/utils/authorize"),
     access = _require.access; // GitHub Data fetch
 
 
-var gitHub = require('../server/utils/github/github'); // SQLIZE & DB Connection
+var gitHub = require("../server/utils/github/github"); // api helper functions
 
 
-var Sequelize = require('sequelize');
+var intUpdFunct = require("../server/utils/APIfunctions/intervalUpdates"); // SQLIZE & DB Connection
 
-var _require2 = require('../database/database'),
+
+var Sequelize = require("sequelize");
+
+var _require2 = require("../database/database"),
     db = _require2.db,
     Users = _require2.Users,
     Intervals = _require2.Intervals,
@@ -48,16 +51,16 @@ var _require2 = require('../database/database'),
     Issues_Intervals = _require2.Issues_Intervals,
     Files_Intervals = _require2.Files_Intervals;
 
-if (process.env !== 'production') {
-  require('dotenv').config();
+if (process.env !== "production") {
+  require("dotenv").config();
 }
 
 var app = express();
 var PORT = process.env.PORT;
-var FRED = 'FRED';
-var MIKE = 'MIKE'; // app.use(express.static(path.join(__dirname, '/../index.html')));
+var FRED = "FRED";
+var MIKE = "MIKE"; // app.use(express.static(path.join(__dirname, '/../index.html')));
 
-app.get('/', function (req, res) {
+app.get("/", function (req, res) {
   res.write(parts[0]);
 
   var reactMarkup = _react.default.createElement(_App.default, null);
@@ -66,13 +69,13 @@ app.get('/', function (req, res) {
   stream.pipe(res, {
     end: false
   });
-  stream.on('end', function () {
+  stream.on("end", function () {
     res.write(parts[1]);
     res.end();
   });
 });
 app.use(session({
-  secret: 'PotatoCode',
+  secret: "PotatoCode",
   resave: false,
   saveUninitialized: true
 }));
@@ -80,18 +83,18 @@ app.use(bodyParser.urlencoded({
   extended: false
 }));
 app.use(bodyParser.json());
-app.use('/auth', oauth);
-app.use('/query', gitHub); //Initial setup
+app.use("/auth", oauth);
+app.use("/query", gitHub); //Initial setup
 
-app.get('/login', function (req, res) {
-  res.send('Please Login.');
+app.get("/login", function (req, res) {
+  res.send("Please Login.");
 }); // GET the last 3 interval updates
 
-app.get('/api/intervalUpdates', function (req, res) {
+app.get("/api/intervalUpdates", function (req, res) {
   var user_name = req.query.userName; //REMOVE THIS FOR PROD
   // const user_name = 'fredricklou523';
 
-  Intervals.max('true_interval_num', {
+  Intervals.max("true_interval_num", {
     where: {
       user_name: user_name
     }
@@ -101,7 +104,7 @@ app.get('/api/intervalUpdates', function (req, res) {
     return Issues_Intervals.findAll({
       include: [{
         model: Issues,
-        attributes: ['plan_seconds', 'issue_name']
+        attributes: ["plan_seconds", "title"]
       }],
       where: {
         user_name: user_name,
@@ -109,20 +112,21 @@ app.get('/api/intervalUpdates', function (req, res) {
       }
     });
   }).then(function (records) {
-    res.send(records);
+    console.log(intUpdFunct);
+    res.send(intUpdFunct.powerUp(records));
   });
 }); //Post
 
-app.post('/api/vsCode', function (req, res) {
+app.post("/api/vsCode", function (req, res) {
   var user_name = req.body.userName;
   var daily_interval = req.body.interval;
   var data = req.body.data;
-  console.log('SOME LARGE STRING BIG AND LONG'); // issues get rewritten as an array of {id: id, title: title}
+  console.log("SOME LARGE STRING BIG AND LONG"); // issues get rewritten as an array of {id: id, title: title}
 
   var issuesList = Object.keys(data);
   var true_interval_num, intervalId; // incrementing true interval num; Users is source of truth for trueIntervalNum
 
-  Users.increment('true_interval_num', {
+  Users.increment("true_interval_num", {
     where: {
       user_name: user_name
     }
@@ -141,7 +145,7 @@ app.post('/api/vsCode', function (req, res) {
       where: {
         title: issuesList
       },
-      attributes: ['id', 'title']
+      attributes: ["id", "title"]
     });
   }).then(
   /*#__PURE__*/
@@ -201,9 +205,9 @@ app.post('/api/vsCode', function (req, res) {
                   for (info in entry[file_path][status]) {
                     filesIntervalObj[info] = entry[file_path][status][info]; //store interval data
 
-                    if (info === 'active') issuesIntervalsObj.active += filesIntervalObj[info];
-                    if (info === 'idle') issuesIntervalsObj.idle += filesIntervalObj[info];
-                    if (info === 'word_count') issuesIntervalsObj.word_count += filesIntervalObj[info];
+                    if (info === "active") issuesIntervalsObj.active += filesIntervalObj[info];
+                    if (info === "idle") issuesIntervalsObj.idle += filesIntervalObj[info];
+                    if (info === "word_count") issuesIntervalsObj.word_count += filesIntervalObj[info];
                   } //save FilesInterval HERE
 
 
@@ -219,8 +223,8 @@ app.post('/api/vsCode', function (req, res) {
                 where: {
                   issueId: issueId
                 },
-                attributes: ['total_active', 'total_idle'],
-                order: [['createdAt', 'DESC']]
+                attributes: ["total_active", "total_idle"],
+                order: [["createdAt", "DESC"]]
               }).then(function (results) {
                 return results === null ? {
                   prior_active: 0,
@@ -253,7 +257,7 @@ app.post('/api/vsCode', function (req, res) {
               return _context.stop();
           }
         }
-      }, _callee, this);
+      }, _callee);
     }));
 
     return function (_x) {

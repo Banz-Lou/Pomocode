@@ -59,7 +59,6 @@ class IntervalUpdatesChart extends Component {
 
     //ACTIVE -> STACKED CHART
     stackData.forEach((bar, i) => {
-      console.log(bar);
       let xpos = i > 0 ? bar[0][0] : 0;
       let result = {
         y: yScale(bar[0].data.id),
