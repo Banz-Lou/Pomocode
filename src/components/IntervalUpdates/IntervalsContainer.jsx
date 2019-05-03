@@ -2,10 +2,17 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Interval from './Interval';
 
-var IntervalsContainer = ({ intervals }) => {
+class IntervalsContainer extends React.Component {
+	constructor(props){
+		super(props);
+	}
+	componentDidMount(){
+		this.props.fetchIntervals();
+	}
+
 	return (
 		<div id="intervals" className="inner-sub-container">
-			{intervals.map(item => (
+			{this.props.intervals.map(item => (
 				<Interval item={item} />
 			))}
 		</div>
@@ -15,4 +22,11 @@ var IntervalsContainer = ({ intervals }) => {
 const mapStateToProps = state => ({
 	intervals: state.intervals
 });
-export default connect(mapStateToProps)(IntervalsContainer);
+
+const mapDispatchToProps = dispatch => ({
+		fetchIntervals: () => {
+			dispatch(fetchIntervals())
+		}
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(IntervalsContainer);
