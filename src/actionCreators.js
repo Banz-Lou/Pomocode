@@ -6,22 +6,24 @@ import axios from "axios";
 import { SET_SEARCH_TERM } from "./actions";
 import { IntervalsUpdatesActions } from "./actions";
 
-export function fetchIntervals() {
-  return async dispatch => {
-    dispatch({ type: IntervalsUpdatesActions.BEGIN_FETCH_INTERVALS });
-    try {
-      const intervals = await axios.get("/");
-      dispatch({
-        type: IntervalsUpdatesActions.SUCCESS_FETCH_INTERVALS,
-        payload: intervals
-      });
-    } catch (error) {
-      dispatch({
-        type: IntervalsUpdatesActions.FAIL_FETCH_INTERVALS,
-        payload: error
-      });
-    }
-  };
+export class IntervalsUpdatesActionCreators {
+  static fetchIntervals() {
+    return async dispatch => {
+      dispatch({ type: IntervalsUpdatesActions.BEGIN_FETCH_INTERVALS });
+      try {
+        const intervals = [[20, 6], [57, 3], [3, 1, 70]];
+        dispatch({
+          type: IntervalsUpdatesActions.SUCCESS_FETCH_INTERVALS,
+          intervals
+        });
+      } catch (error) {
+        dispatch({
+          type: IntervalsUpdatesActions.FAIL_FETCH_INTERVALS,
+          payload: error
+        });
+      }
+    };
+  }
 }
 
 export function setSearchTerm(searchTerm) {

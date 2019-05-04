@@ -1,8 +1,8 @@
 // intervals: [{}, {}, ...]  //top 5
 import { SET_INTERVALS } from "../actions";
-import { IntervalsUpdatesActions } from "./actions";
+import { IntervalsUpdatesActions } from "../actions";
 
-let testData = [[6, 6], [3, 3], [1, 2, 3]];
+let testData = { data: [[6, 6], [3, 3], [1, 2, 3]], loading: false };
 
 // let rawQuery = [
 // 	{TrueIntervalNum: 1, },
@@ -18,35 +18,19 @@ let testData = [[6, 6], [3, 3], [1, 2, 3]];
 // ]
 
 export default function intervals(state = testData, action) {
-  if (action.type === SET_INTERVALS) {
-    return action.payload;
-  }
-  return state;
-}
-
-const intervals(state, action) {
-	switch (action.type) {
-		case IntervalsUpdatesActions.BEGIN_FETCH_INTERVAL
-	}
-}
-
-const competitionsReducer = (
-  state: CompetitionsState = initialState,
-  action: CompetitionsAction
-): CompetitionsState => {
   switch (action.type) {
-    case CompetitionActionTypes.BEGIN_FETCH_COMPETITIONS:
+    case IntervalsUpdatesActions.BEGIN_FETCH_INTERVALS:
       return {
         ...state,
         loading: true
       };
-    case CompetitionActionTypes.SUCCESS_FETCH_COMPETITIONS:
+    case IntervalsUpdatesActions.SUCCESS_FETCH_INTERVALS:
       return {
         ...state,
-        data: state.data.concat(newCompetitions),
+        data: action.intervals,
         loading: false
       };
-    case CompetitionActionTypes.FAIL_FETCH_COMPETITIONS:
+    case IntervalsUpdatesActions.FAIL_FETCH_INTERVALS:
       return {
         ...state,
         loading: false
@@ -54,4 +38,4 @@ const competitionsReducer = (
     default:
       return state;
   }
-};
+}

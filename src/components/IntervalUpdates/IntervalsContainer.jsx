@@ -1,32 +1,39 @@
-import React from 'react';
-import { connect } from 'react-redux';
-import Interval from './Interval';
+import React from "react";
+import { connect } from "react-redux";
+import Interval from "./Interval";
+import { IntervalsUpdatesActionCreators } from "../../actionCreators";
 
 class IntervalsContainer extends React.Component {
-	constructor(props){
-		super(props);
-	}
-	componentDidMount(){
-		this.props.fetchIntervals();
-	}
+  constructor(props) {
+    super(props);
+  }
 
-	return (
-		<div id="intervals" className="inner-sub-container">
-			{this.props.intervals.map(item => (
-				<Interval item={item} />
-			))}
-		</div>
-	);
-};
+  componentDidMount() {
+    this.props.fetchIntervals();
+  }
+
+  render() {
+    return (
+      <div id="intervals" className="inner-sub-container">
+        {this.props.intervals.map(item => (
+          <Interval item={item} />
+        ))}
+      </div>
+    );
+  }
+}
 
 const mapStateToProps = state => ({
-	intervals: state.intervals
+  intervals: state.intervals.data
 });
 
 const mapDispatchToProps = dispatch => ({
-		fetchIntervals: () => {
-			dispatch(fetchIntervals())
-		}
+  fetchIntervals: () => {
+    dispatch(IntervalsUpdatesActionCreators.fetchIntervals()); // dispatch(async func(dispatch) {...})
+  }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(IntervalsContainer);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(IntervalsContainer);
