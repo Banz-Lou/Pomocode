@@ -5,19 +5,19 @@ import { IntUpdDimensions } from "./dimensions.js";
 const { width, height, margin, colors, legend, barHeight } = IntUpdDimensions;
 const legendKeys = ["Plan", "Active", "Prior Active"];
 
-let data = [
-  {
-    id: 1,
-    type: "Plan",
-    plan_seconds: 3840
-  },
-  {
-    id: 1,
-    type: "Active",
-    prior_active: 3000,
-    active: 600
-  }
-];
+// let data = [
+//   {
+//     id: 1,
+//     type: "Plan",
+//     plan_seconds: 3840
+//   },
+//   {
+//     id: 1,
+//     type: "Active",
+//     prior_active: 3000,
+//     active: 600
+//   }
+// ];
 
 class IntervalUpdatesChart extends Component {
   state = {
@@ -25,6 +25,9 @@ class IntervalUpdatesChart extends Component {
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
+    const { data } = nextProps;
+
+    console.log(data);
     //Create stack data
     let stack = d3.stack().keys(["prior_active", "active"]);
 
@@ -45,7 +48,7 @@ class IntervalUpdatesChart extends Component {
       .range([0, width - margin.right]);
 
     // create y scale
-    const yExtent = d3.extent(data, d => d.id);
+    const yExtent = d3.extent(data, d => d.type);
     const yScale = d3
       .scaleLinear()
       .domain(yExtent)
@@ -61,7 +64,7 @@ class IntervalUpdatesChart extends Component {
     stackData.forEach((bar, i) => {
       let xpos = i > 0 ? bar[0][0] : 0;
       let result = {
-        y: yScale(bar[0].data.id),
+        y: yScale(bar[0].data.type,
         x: xScale(xpos),
         width: xScale(bar[0][1]) - xScale(bar[0][0]),
         fill: colorScale(bar.key)
@@ -72,13 +75,13 @@ class IntervalUpdatesChart extends Component {
     // PLANNED BAR
     const planBars = [data[0]].map(d => {
       return {
-        y: yScale(d.id),
+        y: yScale(d.type),
         x: xScale(0),
         width: xScale(d.plan_seconds) - xScale(0),
         fill: colors.planned
       };
     });
-
+    console.log(activeBars);
     return { activeBars, planBars };
   }
 

@@ -3,17 +3,6 @@ const session = require("express-session");
 const bodyParser = require("body-parser");
 const path = require("path");
 
-//  Server-Side
-import React from "react";
-import { renderToNodeStream } from "react-dom/server";
-//this allows us the backend to handle client side routing (if we use it)
-// import { ServerLocation } from '@reach/router';
-import fs from "fs";
-import App from "../src/components/App";
-
-const html = fs.readFileSync("dist/index.html").toString();
-const parts = html.split("not rendered");
-
 // Authentication and Authorization
 const oauth = require("../server/utils/authenticate");
 const { access } = require("../server/utils/authorize");
@@ -42,21 +31,8 @@ const app = express();
 const { PORT } = process.env;
 const FRED = "FRED";
 const MIKE = "MIKE";
-// app.use(express.static(path.join(__dirname, '/../index.html')));
 
-app.get("/", (req, res) => {
-  res.write(parts[0]);
-  const reactMarkup = <App />;
-  const stream = renderToNodeStream(reactMarkup);
-  stream.pipe(
-    res,
-    { end: false }
-  );
-  stream.on("end", () => {
-    res.write(parts[1]);
-    res.end();
-  });
-});
+app.use(express.static(path.join(__dirname, "/../dist")));
 
 app.use(
   session({
@@ -71,7 +47,6 @@ app.use("/auth", oauth);
 app.use("/query", gitHub);
 
 //Initial setup
-
 app.get("/login", (req, res) => {
   res.send("Please Login.");
 });
@@ -96,7 +71,6 @@ app.get("/api/intervalUpdates", (req, res) => {
       });
     })
     .then(records => {
-      console.log(intUpdFunct);
       res.send(intUpdFunct.powerUp(records));
     });
 });

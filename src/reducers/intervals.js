@@ -2,7 +2,9 @@
 import { SET_INTERVALS } from "../actions";
 import { IntervalsUpdatesActions } from "../actions";
 
-let testData = { data: [[6, 6], [3, 3], [1, 2, 3]], loading: false };
+var emptyObj = { issue: {} };
+
+let testData = { data: [[emptyObj], [emptyObj], [emptyObj]], loading: false };
 
 // let rawQuery = [
 // 	{TrueIntervalNum: 1, },

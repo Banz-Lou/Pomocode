@@ -1,5 +1,5 @@
 class intUpdFunct {
-  powerUp = originalData => {
+  powerUp(originalData) {
     let hashObj = {};
     originalData.forEach(issue => {
       if (hashObj[issue.true_interval_num]) {
@@ -9,7 +9,7 @@ class intUpdFunct {
       }
     });
     return Object.values(hashObj);
-  };
+  }
 }
 
 module.exports = new intUpdFunct();

@@ -1,17 +1,16 @@
 // Create ActionCreators folder
 // Separate Action Creators per js file
 
-import axios from "axios";
-
 import { SET_SEARCH_TERM } from "./actions";
 import { IntervalsUpdatesActions } from "./actions";
+import database from "./utils/database";
 
 export class IntervalsUpdatesActionCreators {
   static fetchIntervals() {
     return async dispatch => {
       dispatch({ type: IntervalsUpdatesActions.BEGIN_FETCH_INTERVALS });
       try {
-        const intervals = [[20, 6], [57, 3], [3, 1, 70]];
+        const intervals = await database.fetchIntervals();
         dispatch({
           type: IntervalsUpdatesActions.SUCCESS_FETCH_INTERVALS,
           intervals
