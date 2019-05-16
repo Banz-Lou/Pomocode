@@ -1,19 +1,19 @@
-import { combineReducers } from 'redux';
-import { SET_SEARCH_TERM } from '../actions';
-import searchTerm from './example.js';
-import activeIssues from './activeIssues';
-import details from './plans';
-import historical from './historical';
-import intervals from './intervals';
-import plans from './plans';
+import { combineReducers } from "redux";
+import { SET_SEARCH_TERM } from "../actions";
+import searchTerm from "./example.js";
+import activeIssues from "./activeIssues";
+import details from "./details";
+import historical from "./historical";
+import intervals from "./intervals";
+import plans from "./plans";
 
 const rootReducer = combineReducers({
-	searchTerm,
-	activeIssues,
-	details,
-	historical,
-	intervals,
-	plans
+  searchTerm,
+  activeIssues,
+  details,
+  historical,
+  intervals,
+  plans
 });
 
 export default rootReducer;

@@ -9,7 +9,6 @@ export default class database {
         }
       })
       .then(intervals => {
-        console.log(intervals);
         return intervals.data;
       })
       .catch(err => {

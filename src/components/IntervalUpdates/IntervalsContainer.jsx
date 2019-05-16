@@ -29,7 +29,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   fetchIntervals: () => {
-    dispatch(IntervalsUpdatesActionCreators.fetchIntervals()); // dispatch(async func(dispatch) {...})
+    dispatch(IntervalsUpdatesActionCreators.fetchIntervals());
   }
 });
 

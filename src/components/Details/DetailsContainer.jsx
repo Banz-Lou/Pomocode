@@ -1,14 +1,34 @@
-import React from 'react';
-import { DetailsGraph } from './DetailsGraph';
-import { DetailsStats } from './DetailsStats';
+import React from "react";
+import { connect } from "react-redux";
+import { DetailsGraph } from "./DetailsGraph";
+import { DetailsStats } from "./DetailsStats";
 
-var DetailsContainer = () => {
-	return (
-		<div id="details" className="inner-sub-container">
-			<DetailsGraph />
-			<DetailsStats />
-		</div>
-	);
-};
+class DetailsContainer extends React.Component {
+  constructor(props) {
+    super(props);
+    this.renderGraph = this.renderGraph.bind(this);
+  }
 
-export default DetailsContainer;
+  renderGraph() {
+    if (this.props.selectedGraph === "Interval") {
+      return <div>Interval</div>;
+    } else {
+      return <div>Issue</div>;
+    }
+  }
+
+  render() {
+    return (
+      <div id="details" className="inner-sub-container">
+        {this.renderGraph()}
+        <DetailsStats />
+      </div>
+    );
+  }
+}
+
+const mapStateToProps = state => ({
+  selectedGraph: state.details.selectedGraph
+});
+
+export default connect(mapStateToProps)(DetailsContainer);

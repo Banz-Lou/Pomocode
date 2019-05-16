@@ -2,22 +2,30 @@
 import { SET_INTERVALS } from "../actions";
 import { IntervalsUpdatesActions } from "../actions";
 
-var emptyObj = { issue: {} };
+// initial state obj
+var emptyObj = {
+  id: 0,
+  user_name: "",
+  daily_interval: 0,
+  true_interval_num: 0,
+  prior_active: 0,
+  active: 0,
+  total_active: 0,
+  prior_idle: 0,
+  idle: 0,
+  total_idle: 0,
+  word_count: 0,
+  createdAt: "",
+  updatedAt: "",
+  intervalId: 0,
+  issueId: 0,
+  issue: {
+    plan_seconds: 0,
+    title: ""
+  }
+};
 
 let testData = { data: [[emptyObj], [emptyObj], [emptyObj]], loading: false };
-
-// let rawQuery = [
-// 	{TrueIntervalNum: 1, },
-// 	{},
-// 	{}
-// ]
-
-// let data = [
-// 	{Issue: 1, plan: 50 },
-// 	{Issue: 1,Time: 25, IntervalTime: 30},
-// 	{Issue: 2, plan: 60},
-// 	{Issue: 2, Time: 30, IntervalTime: 25}
-// ]
 
 export default function intervals(state = testData, action) {
   switch (action.type) {

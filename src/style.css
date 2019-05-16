@@ -48,6 +48,12 @@ header {
   /* flex-grow: 1; */
 }
 
+#planning {
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
 /* Responsive Design */
 @media only screen and (max-width: 620px) {
   /* mobile phones */

@@ -80,7 +80,7 @@ app.post("/api/vsCode", (req, res) => {
   const user_name = req.body.userName;
   const daily_interval = req.body.interval;
   const data = req.body.data;
-  console.log("SOME LARGE STRING BIG AND LONG");
+
   // issues get rewritten as an array of {id: id, title: title}
   let issuesList = Object.keys(data);
   let true_interval_num, intervalId;

@@ -6,10 +6,8 @@
   "scripts": {
     "server": "nodemon server/server.js",
     "start": "node server/server.js",
-    "dev": "webpack-dev-server --env.mode development --watch --hot",
-    "build": "webpack --watch --hot",
-    "serverbuild": "babel server/server.js --watch -d dist",
-    "ssr": "babel-node dist/server.js"
+    "webdev": "webpack-dev-server --env.mode development --watch --hot",
+    "dev": "webpack --watch --hot"
   },
   "repository": {
     "type": "git",

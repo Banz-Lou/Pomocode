@@ -1,5 +1,5 @@
-import React from 'react';
+import React from "react";
 
 export var HistoricalStats = () => {
-	return 'HIST STATS';
+  return "HIST STATS";
 };
