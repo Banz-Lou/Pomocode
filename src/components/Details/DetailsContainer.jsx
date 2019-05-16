@@ -10,10 +10,11 @@ class DetailsContainer extends React.Component {
   }
 
   renderGraph() {
-    if (this.props.selectedGraph === "Interval") {
-      return <div>Interval</div>;
+    if (this.props.selectedGraph.interval) {
+      //Will be used to swap out which graph we choose to render
+      return <div>Interval + {this.props.selectedGraph.interval}</div>;
     } else {
-      return <div>Issue</div>;
+      return <div>Issue + {this.props.selectedGraph.issue}</div>;
     }
   }
 

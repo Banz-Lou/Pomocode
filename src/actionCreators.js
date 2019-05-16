@@ -1,12 +1,7 @@
 // Create ActionCreators folder
 // Separate Action Creators per js file
 
-import {
-  SET_SEARCH_TERM,
-  SET_GRAPH_ISSUE,
-  SET_GRAPH_INTERVAL
-} from "./actions";
-import { IntervalsUpdatesActions } from "./actions";
+import { IntervalsUpdatesActions, DetailsGraphActions } from "./actions";
 import database from "./utils/database";
 
 export class IntervalsUpdatesActionCreators {
@@ -31,14 +26,28 @@ export class IntervalsUpdatesActionCreators {
 
 export class DetailsActionCreators {
   static setGraph(selected) {
-    if (selected.issue) {
-      return { type: SET_GRAPH_ISSUE, issue: selected.issue };
-    } else {
-      return { type: SET_GRAPH_INTERVAL, interval: selected.interval };
-    }
+    return async dispatch => {
+      dispatch({ type: DetailsGraphActions.BEGIN_FETCH_DETAILS });
+      try {
+        const data = await database.fetchDetails(selected);
+        if (selected.issue) {
+          dispatch({
+            type: DetailsGraphActions.SET_GRAPH_ISSUE,
+            issue: selected
+          });
+        } else {
+          dispatch({
+            type: DetailsGraphActions.SET_GRAPH_INTERVAL,
+            interval: selected
+          });
+        }
+        dispatch({ type: DetailsGraphActions.SUCCESS_FETCH_DETAILS, data });
+      } catch (error) {
+        dispatch({
+          type: DetailsGraphActions.FAIL_FETCH_DETAILS,
+          payload: error
+        });
+      }
+    };
   }
-}
-
-export function setSearchTerm(searchTerm) {
-  return { type: SET_SEARCH_TERM, payload: searchTerm };
 }

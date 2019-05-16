@@ -15,4 +15,8 @@ export default class database {
         console.log(err);
       });
   };
+
+  static fetchDetails = select => {
+    return [{}, {}, {}, {}];
+  };
 }
