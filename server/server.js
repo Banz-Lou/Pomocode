@@ -76,6 +76,7 @@ app.get("/api/intervalUpdates", (req, res) => {
 });
 
 // get datails graph data
+//ADDD UsEr
 app.get("/api/detailsGraph", (req, res) => {
   let selected = JSON.parse(req.query.selected);
   if (selected.interval) {
@@ -86,7 +87,27 @@ app.get("/api/detailsGraph", (req, res) => {
       { interval: 4 }
     ]);
   } else {
-    res.send([{ issue: 1 }, { issue: 2 }, { issue: 3 }, { issue: 4 }]);
+    Issues_Intervals.findAll({
+      include: [{ model: Issues, attributes: ["plan_seconds", "title"] }],
+      where: {
+        issueId: selected.issue
+      }
+    }).then(records => {
+      let graphData = records.map(rec => ({
+        active: rec.active,
+        idle: rec.idle,
+        total_idle: rec.total_idle,
+        total_active: rec.total_active,
+        intervalId: rec.intervalId,
+        createdAt: rec.createdAt
+      }));
+      let results = {
+        title: records[0].issue.title,
+        plan: records[0].issue.plan_seconds,
+        graphData
+      };
+      res.send(results);
+    });
   }
 });
 

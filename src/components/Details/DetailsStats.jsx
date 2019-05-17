@@ -1,4 +1,10 @@
-import React from 'react';
+import React from "react";
+import IssueDetailsChart from "../Vizualizations/IssueDetailsChart.js";
 export var DetailsStats = () => {
-	return <div>"STATS"</div>;
+  return (
+    <div>
+      "STATS"
+      <IssueDetailsChart />
+    </div>
+  );
 };
