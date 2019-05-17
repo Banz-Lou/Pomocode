@@ -75,6 +75,21 @@ app.get("/api/intervalUpdates", (req, res) => {
     });
 });
 
+// get datails graph data
+app.get("/api/detailsGraph", (req, res) => {
+  let selected = JSON.parse(req.query.selected);
+  if (selected.interval) {
+    res.send([
+      { interval: 1 },
+      { interval: 2 },
+      { interval: 3 },
+      { interval: 4 }
+    ]);
+  } else {
+    res.send([{ issue: 1 }, { issue: 2 }, { issue: 3 }, { issue: 4 }]);
+  }
+});
+
 //Post
 app.post("/api/vsCode", (req, res) => {
   const user_name = req.body.userName;
