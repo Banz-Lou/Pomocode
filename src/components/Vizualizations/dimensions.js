@@ -14,19 +14,35 @@ const HistDetDimensions = {
   }
 };
 
+const [DetailsGraphsDimensionsWidth, DetailsGraphsDimensionsHeight] = [
+  650,
+  400
+];
 const DetailsGraphsDimensions = {
-  width: 650,
-  height: 400,
-  margin: { top: 20, right: 40, bottom: 20, left: 35 },
+  width: DetailsGraphsDimensionsWidth,
+  height: DetailsGraphsDimensionsHeight,
+  margin: {
+    top: 20,
+    right: DetailsGraphsDimensionsWidth * 0.25,
+    bottom: 20,
+    left: 35
+  },
   colors: {
     planned: "#98abc5",
     actual: "#ff8c00",
     difference: "maroon"
   },
   legend: {
-    rect: 2,
-    spacing: 2,
-    height: 2
+    rectY: 0,
+    rectW: 10,
+    rectH: 10,
+    Active: "#ff8c00",
+    Idle: "maroon",
+    Plan: "pink",
+    Total: "green",
+    positionX: DetailsGraphsDimensionsWidth * 0.8,
+    positionY: DetailsGraphsDimensionsHeight * 0.5,
+    keySpacing: 15
   }
 };
 
